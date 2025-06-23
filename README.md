@@ -15,9 +15,7 @@
 ## Legende
 
 ### Anonymisierung
-- **Personalnummern**: wurden durch `********` ersetzt
 - **Mitarbeiternamen**: wurden zu `Uservorname[X] Usernachname[X]` anonymisiert
-- **Kostenstellen**: wurden durch `********` ersetzt
 - **Vorgesetztennamen**: wurden zu `Vorgesetzter[X] Nachname[X]` anonymisiert
 - **Abteilungsbezeichnungen**: blieben zur besseren Lesbarkeit erhalten
 
