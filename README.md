@@ -8,9 +8,9 @@
 
 | Datum der Maßnahme | Personalnummer | Mitarbeiter | Kostenstelle | Abteilung | Vorgesetzter | Maßnahmenart | Maßnahmegrund |
 |-------------------|----------------|-------------|--------------|-----------|--------------|--------------|---------------|
-| 01.01.2025 | 12345678 | Uservorname1 Usernachname1 | 56468753 | ADM S Projektmanagement | Vorgesetzter1 Nachname1 | Einstellung | - |
-| 01.01.2025 | ******** | Uservorname2 Usernachname2 | ******** | END Stoffwechseldiagnostik | Vorgesetzter2 Nachname2 | Wiedereinstellung | - |
-| 01.01.2025 | ******** | Uservorname3 Usernachname3 | ******** | Innovationsmanagement | Vorgesetzter3 Nachname3 | Austritt | - |
+| 01.01.2025 | 12345678 | Uservorname1 Usernachname1 | 10002000 | ADM S Projektmanagement | Vorgesetzter1 Nachname1 | Einstellung | - |
+| 01.01.2025 | 75435786 | Uservorname2 Usernachname2 | 10002001 | END Stoffwechseldiagnostik | Vorgesetzter2 Nachname2 | Wiedereinstellung | - |
+| 01.01.2025 | 23453543 | Uservorname3 Usernachname3 | 10002005 | Innovationsmanagement | Vorgesetzter3 Nachname3 | Austritt | - |
 
 ## Legende
 
