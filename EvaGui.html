@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus - Finale UI-Vorlage (Vollständig korrigiert)</title>
+    <title>Nexus - Finale UI-Vorlage mit Login-Name</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,6 @@
         .dark .dark\:border-slate-600 { border-color: #475569; }
         .dark .dark\:hover\:bg-slate-700\/50:hover { background-color: rgba(51, 65, 85, 0.5); }
         .dark .dark\:placeholder-slate-500::placeholder { color: #64748b; }
-        /* KORRIGIERT: Dark-Mode für die Footer der Panels */
         .dark .dark\:bg-slate-800\/50 { background-color: rgba(30, 41, 59, 0.5); }
 
         .task-item-active { background-color: #e0f2fe; border-color: #38bdf8; }
@@ -96,6 +95,8 @@
                         <div class="p-5 space-y-6">
                             <div class="grid grid-cols-2 gap-6">
                                 <div class="space-y-4"><h4 class="font-semibold">1. Berechtigungen festlegen</h4>
+                                    <!-- NEU: Login-Name Feld -->
+                                    <div><label class="text-sm font-medium">Login-Name (sAMAccountName)</label><input type="text" id="login-name-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
                                     <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
                                     <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500" placeholder="Gruppe eingeben + Enter"></div>
                                 </div>
