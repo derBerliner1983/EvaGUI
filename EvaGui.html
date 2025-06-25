@@ -54,10 +54,10 @@
             <header class="flex items-center justify-between mb-6">
                 <div class="flex items-center"><i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i><h1 class="text-2xl font-bold ml-3">Nexus</h1></div>
                 <div class="flex items-center space-x-3">
-                    <button class="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <button id="import-excel-button" class="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700">
                         <i data-lucide="file-up" class="h-4 w-4 mr-2"></i> Excel-Liste importieren
                     </button>
-                    <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">
+                    <button id="add-manual-button" class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">
                         <i data-lucide="plus" class="h-4 w-4 mr-2"></i> Manuell hinzufügen
                     </button>
                     <div class="relative">
@@ -89,14 +89,13 @@
 
                 <!-- Rechte Spalte -->
                 <div class="col-span-12 lg:col-span-8">
-                    <!-- Panels -->
                     <div id="panel-onboarding" class="action-panel bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
                         <div class="p-5 border-b border-slate-200 dark:border-slate-700"><h3 class="text-lg font-bold">Onboarding: Uservorname1 Usernachname1</h3></div>
                         <div class="p-5 space-y-6">
                             <div class="grid grid-cols-2 gap-6">
                                 <div class="space-y-4"><h4 class="font-semibold">1. Berechtigungen festlegen</h4>
-                                    <!-- NEU: Login-Name Feld -->
-                                    <div><label class="text-sm font-medium">Login-Name (sAMAccountName)</label><input type="text" id="login-name-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
+                                    <!-- KORRIGIERT: (sAMAccountName) entfernt -->
+                                    <div><label class="text-sm font-medium">Login-Name</label><input type="text" id="login-name-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
                                     <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
                                     <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500" placeholder="Gruppe eingeben + Enter"></div>
                                 </div>
@@ -147,39 +146,110 @@
             </div>
         </footer>
     </div>
+    
+    <!-- Modale Dialoge (standardmäßig verborgen) -->
+    <div id="manual-add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-20 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg w-full max-w-2xl">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Neue Aufgabe manuell erfassen</h3>
+                <button class="close-modal-button p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-sm font-medium">Mitarbeitername</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"></div>
+                    <div><label class="text-sm font-medium">Login-Name</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"></div>
+                    <div><label class="text-sm font-medium">Abteilung</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"></div>
+                     <div><label class="text-sm font-medium">Maßnahmenart</label><select class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"><option>Einstellung</option><option>Versetzung</option><option>Austritt</option></select></div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
+                <button class="close-modal-button px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-600">Abbrechen</button>
+                <button class="px-4 py-2 bg-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">Aufgabe hinzufügen</button>
+            </div>
+        </div>
+    </div>
+    <div id="excel-import-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-20 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg w-full max-w-xl">
+             <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Excel-Liste importieren</h3>
+                <button class="close-modal-button p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="p-8">
+                <div id="drop-zone" class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-10 text-center cursor-pointer hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
+                    <i data-lucide="upload-cloud" class="h-12 w-12 mx-auto text-slate-400"></i>
+                    <p class="mt-2 font-semibold">Datei hierher ziehen</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">oder zum Auswählen klicken</p>
+                    <input type="file" id="file-input" class="hidden" accept=".xlsx, .xls, .csv">
+                </div>
+                <div id="file-name" class="mt-4 text-sm text-center"></div>
+            </div>
+             <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
+                <button class="close-modal-button px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-600">Schließen</button>
+            </div>
+        </div>
+    </div>
 
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
 
-            // --- THEME SWITCHER LOGIC ---
+            // --- Logik für Modale Dialoge ---
+            const addManualButton = document.getElementById('add-manual-button');
+            const importExcelButton = document.getElementById('import-excel-button');
+            const manualAddModal = document.getElementById('manual-add-modal');
+            const excelImportModal = document.getElementById('excel-import-modal');
+            const closeButtons = document.querySelectorAll('.close-modal-button');
+
+            addManualButton.addEventListener('click', () => manualAddModal.classList.remove('hidden'));
+            importExcelButton.addEventListener('click', () => excelImportModal.classList.remove('hidden'));
+            
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    manualAddModal.classList.add('hidden');
+                    excelImportModal.classList.add('hidden');
+                });
+            });
+
+            // Excel-Import Drag & Drop Logik
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const fileNameDisplay = document.getElementById('file-name');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    fileNameDisplay.textContent = `Ausgewählte Datei: ${fileInput.files[0].name}`;
+                }
+            });
+
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-sky-500', 'bg-sky-50', 'dark:bg-sky-900/20'); });
+            dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-sky-500', 'bg-sky-50', 'dark:bg-sky-900/20'); });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-sky-500', 'bg-sky-50', 'dark:bg-sky-900/20');
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileNameDisplay.textContent = `Ausgewählte Datei: ${fileInput.files[0].name}`;
+                }
+            });
+
+
+            // --- Theme Switcher Logik ---
             const themeToggleButton = document.getElementById('theme-toggle-button');
             const themeMenu = document.getElementById('theme-menu');
             const themeOptions = document.querySelectorAll('.theme-option');
 
-            themeToggleButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                themeMenu.classList.toggle('hidden');
-            });
-            
+            themeToggleButton.addEventListener('click', (e) => { e.stopPropagation(); themeMenu.classList.toggle('hidden'); });
             document.addEventListener('click', () => themeMenu.classList.add('hidden'));
 
             const applyTheme = (theme) => {
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
+                document.documentElement.classList.toggle('dark', theme === 'dark');
                 lucide.createIcons();
             };
 
             const setSystemTheme = () => {
-                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    applyTheme('dark');
-                } else {
-                    applyTheme('light');
-                }
+                applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             };
             
             themeOptions.forEach(option => {
@@ -187,49 +257,29 @@
                     e.preventDefault();
                     const selectedTheme = e.currentTarget.dataset.theme;
                     localStorage.setItem('theme', selectedTheme);
-                    
-                    if (selectedTheme === 'system') {
-                        setSystemTheme();
-                    } else {
-                        applyTheme(selectedTheme);
-                    }
+                    if (selectedTheme === 'system') { setSystemTheme(); } else { applyTheme(selectedTheme); }
                 });
             });
 
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme && savedTheme !== 'system') {
-                applyTheme(savedTheme);
-            } else {
-                setSystemTheme();
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (localStorage.getItem('theme') === 'system' || !localStorage.getItem('theme')) {
-                    applyTheme(e.matches ? 'dark' : 'light');
-                }
+            if (savedTheme && savedTheme !== 'system') { applyTheme(savedTheme); } else { setSystemTheme(); }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (localStorage.getItem('theme') === 'system' || !localStorage.getItem('theme')) { setSystemTheme(); }
             });
 
-            // --- FUNKTIONIERENDE LOGIK AUS VORHERIGER VERSION ---
-            const globalAdminPassInput = document.getElementById('global-admin-pass');
-            globalAdminPassInput.addEventListener('input', () => {
-                document.getElementById('cred-status').className = globalAdminPassInput.value.length > 0 ? 'status-dot status-ok' : 'status-dot status-neutral';
+            // --- Kernlogik für die Anwendung ---
+            document.getElementById('global-admin-pass').addEventListener('input', (e) => {
+                document.getElementById('cred-status').className = e.target.value.length > 0 ? 'status-dot status-ok' : 'status-dot status-neutral';
             });
-
-            document.getElementById('template-user-on').addEventListener('blur', () => populateOnboardingPreview());
-            
+            document.getElementById('template-user-on').addEventListener('blur', () => populateOnboardingPreview(true));
             document.getElementById('additional-groups-input').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                    e.preventDefault();
-                    addGroup(document.getElementById('preview-groups-container'), e.target.value.trim(), 'blue');
-                    e.target.value = '';
+                    e.preventDefault(); addGroup(document.getElementById('preview-groups-container'), e.target.value.trim(), 'blue'); e.target.value = '';
                 }
             });
-
             document.getElementById('transfer-groups-input').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                    e.preventDefault();
-                    addGroup(document.getElementById('transfer-add-groups'), e.target.value.trim(), 'blue');
-                    e.target.value = '';
+                    e.preventDefault(); addGroup(document.getElementById('transfer-add-groups'), e.target.value.trim(), 'blue'); e.target.value = '';
                 }
             });
 
@@ -237,78 +287,57 @@
         });
 
         // --- ZENTRALE FUNKTIONEN ---
-        function populateOnboardingPreview() {
+        function populateOnboardingPreview(fromTemplate) {
             const container = document.getElementById('preview-groups-container');
-            container.innerHTML = ''; 
-            const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
-            mockTemplateGroups.forEach(group => addGroup(container, group, 'green'));
+            if(fromTemplate) {
+                container.innerHTML = ''; 
+                const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
+                mockTemplateGroups.forEach(group => addGroup(container, group, 'green'));
+            }
+            if (container.childElementCount === 0) { container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Gruppen erscheinen hier...</p>'; }
         }
-        
         function populateTransferPanels() {
             const removeContainer = document.getElementById('transfer-remove-groups');
             const addContainer = document.getElementById('transfer-add-groups');
-            removeContainer.innerHTML = '';
-            addContainer.innerHTML = '';
+            removeContainer.innerHTML = ''; addContainer.innerHTML = '';
             ['V-ADM-Projekte', 'W-Laufwerk-Projekte'].forEach(g => addGroup(removeContainer, g, 'red'));
             ['V-IT-Support'].forEach(g => addGroup(addContainer, g, 'green'));
         }
-
         function populateOffboardingPanel() {
             const container = document.getElementById('offboarding-remove-groups');
             container.innerHTML = '';
             ['V-Labor-Allgemein', 'V-Innovationsmanagement'].forEach(g => addGroup(container, g, 'red'));
         }
-
         function addGroup(container, name, color) {
             const placeholder = container.querySelector('p');
             if (placeholder) placeholder.remove();
-            
             const uniqueId = `group-${container.id}-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
             if (document.getElementById(uniqueId)) return;
-
             const tag = document.createElement('div');
             tag.id = uniqueId;
             tag.className = `group-tag w-fit group-${color}`;
-            
             const span = document.createElement('span');
             span.textContent = name;
             const removeIcon = document.createElement('i');
             removeIcon.setAttribute('data-lucide', 'x');
             removeIcon.className = 'remove-icon h-3 w-3';
-            
             removeIcon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                tag.remove();
-                if (container.childElementCount === 0) {
-                     container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Keine Gruppen.</p>';
-                }
+                e.stopPropagation(); tag.remove();
+                if (container.childElementCount === 0) { container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Keine Gruppen.</p>'; }
             });
-
-            tag.appendChild(span);
-            tag.appendChild(removeIcon);
+            tag.appendChild(span); tag.appendChild(removeIcon);
             container.appendChild(tag);
             lucide.createIcons({nodes: [removeIcon]});
         }
-        
         function selectTask(taskType) {
             document.querySelectorAll('.action-panel').forEach(p => p.classList.add('hidden'));
             document.querySelectorAll('#task-list > div').forEach(t => t.classList.remove('task-item-active'));
-            
             const panel = document.getElementById(`panel-${taskType}`);
             const taskItem = document.getElementById(`task-${taskType}`);
-            
-            if(panel && taskItem) {
-                panel.classList.remove('hidden');
-                taskItem.classList.add('task-item-active');
-            }
-
-            if (taskType === 'onboarding') {
-                populateOnboardingPreview();
-            } else if (taskType === 'transfer') {
-                populateTransferPanels();
-            } else if (taskType === 'offboarding') {
-                populateOffboardingPanel();
-            }
+            if(panel && taskItem) { panel.classList.remove('hidden'); taskItem.classList.add('task-item-active'); }
+            if (taskType === 'onboarding') { populateOnboardingPreview(true); } 
+            else if (taskType === 'transfer') { populateTransferPanels(); } 
+            else if (taskType === 'offboarding') { populateOffboardingPanel(); }
         }
     </script>
 </body>
