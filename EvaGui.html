@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvaGUI - Desktop-Optimiertes UI-Konzept (V3)</title>
+    <title>EvaGUI - Finale Professionelle UI-Vorlage (Final - Repariert)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,202 +14,226 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .task-item-active { background-color: #e0f2fe; border-color: #38bdf8; }
-        .group-tag { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 0.8rem; font-weight: 500; }
-        .group-add { background-color: #dcfce7; color: #166534; }
-        .group-remove { background-color: #fee2e2; color: #991b1b; }
-        .group-neutral { background-color: #e0e7ff; color: #3730a3; }
+        .group-tag { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: 500; gap: 6px; }
+        .group-tag .remove-icon { cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
+        .group-tag:hover .remove-icon { opacity: 1; }
+        
+        .group-green { background-color: #dcfce7; color: #166534; } /* Standard/Vorlage */
+        .group-blue { background-color: #cffafe; color: #0e7490; }  /* Manuell */
+        .group-red { background-color: #fee2e2; color: #991b1b; }    /* Zu entfernen */
+
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; transition: background-color 0.3s ease; }
+        .status-ok { background-color: #22c55e; }
+        .status-fail { background-color: #ef4444; }
+        .status-neutral { background-color: #94a3b8; }
     </style>
 </head>
 <body class="bg-slate-100">
 
-    <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
-        <!-- ===== App Header ===== -->
-        <header class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-                <i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i>
-                <h1 class="text-2xl font-bold ml-3 text-slate-800">EvaGUI</h1>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button class="flex items-center justify-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
-                    <i data-lucide="file-up" class="h-4 w-4 mr-2"></i>
-                    Excel-Liste importieren
-                </button>
-                <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700 transition-colors">
-                    <i data-lucide="plus" class="h-4 w-4 mr-2"></i>
-                    Manuell hinzufügen
-                </button>
-            </div>
-        </header>
+    <div class="flex flex-col h-screen">
+        <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex-grow">
+            <header class="flex items-center justify-between mb-6">
+                <div class="flex items-center"><i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i><h1 class="text-2xl font-bold ml-3 text-slate-800">EvaGUI</h1></div>
+                <div class="flex items-center space-x-3">
+                    <button class="flex items-center justify-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                        <i data-lucide="file-up" class="h-4 w-4 mr-2"></i>
+                        Excel-Liste importieren
+                    </button>
+                    <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700 transition-colors">
+                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i>
+                        Manuell hinzufügen
+                    </button>
+                </div>
+            </header>
 
-        <!-- ===== Main Content Grid ===== -->
-        <div class="grid grid-cols-12 gap-6">
-            
-            <!-- ===== Linke Spalte: Aufgabenliste ===== -->
-            <div class="col-span-12 lg:col-span-4 bg-white rounded-xl border border-slate-200 p-4">
-                 <h3 class="font-semibold text-slate-800 mb-3 px-2">Anstehende Aufgaben</h3>
-                 <div id="task-list" class="space-y-2">
-                     <!-- Onboarding Item (Selected) -->
-                    <div id="task-onboarding" onclick="selectTask('onboarding')" class="p-3 rounded-lg border-2 cursor-pointer task-item-active">
-                        <div class="flex justify-between items-center">
-                            <p class="font-semibold text-sky-800">Uservorname1 Usernachname1</p>
-                            <span class="group-tag group-add">Einstellung</span>
-                        </div>
-                        <p class="text-sm text-slate-600 mt-1">ADM S Projektmanagement</p>
-                    </div>
-                     <!-- Versetzung Item -->
-                    <div id="task-transfer" onclick="selectTask('transfer')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer">
-                       <div class="flex justify-between items-center">
-                            <p class="font-semibold text-slate-800">Uservorname5 Usernachname5</p>
-                            <span class="group-tag group-neutral" style="background-color: #fef9c3; color: #854d0e;">Versetzung</span>
-                        </div>
-                        <p class="text-sm text-slate-600 mt-1">Wechsel zu: IT-Abteilung</p>
-                    </div>
-                     <!-- Offboarding Item -->
-                    <div id="task-offboarding" onclick="selectTask('offboarding')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer">
-                       <div class="flex justify-between items-center">
-                            <p class="font-semibold text-slate-800">Uservorname3 Usernachname3</p>
-                            <span class="group-tag group-remove">Austritt</span>
-                        </div>
-                        <p class="text-sm text-slate-600 mt-1">Innovationsmanagement</p>
-                    </div>
-                 </div>
-            </div>
-
-            <!-- ===== Rechte Spalte: Detail- & Aktionspanels ===== -->
-            <div class="col-span-12 lg:col-span-8">
-                <!-- ONBOARDING PANEL -->
-                <div id="panel-onboarding" class="action-panel bg-white rounded-xl border border-slate-200">
-                    <div class="p-5 border-b border-slate-200">
-                        <h3 class="text-lg font-bold text-slate-900">Onboarding-Aktion: Uservorname1 Usernachname1</h3>
-                    </div>
-                    <div class="p-5 space-y-6">
-                        <!-- Sektion: Gruppenberechtigungen -->
-                        <div class="grid grid-cols-2 gap-6">
-                            <!-- Linke Hälfte: Eingaben -->
-                            <div class="space-y-4">
-                                <h4 class="font-semibold text-slate-700">1. Berechtigungen festlegen</h4>
-                                <div>
-                                    <label for="template-user-on" class="text-sm font-medium text-slate-600 block mb-1">Vorlagen-User</label>
-                                    <input type="text" id="template-user-on" value="mustermann_m" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
-                                </div>
-                                <div>
-                                    <label for="additional-groups-on" class="text-sm font-medium text-slate-600 block mb-1">Zusätzliche Gruppen</label>
-                                    <input type="text" id="additional-groups-on" placeholder="Gruppe eingeben + Enter" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
-                                </div>
-                            </div>
-                            <!-- Rechte Hälfte: Vorschau -->
-                            <div>
-                                <h4 class="font-semibold text-slate-700">2. Resultierende Gruppen (Vorschau)</h4>
-                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
-                                    <span class="group-tag group-add">V-Labor-Allgemein</span>
-                                    <span class="group-tag group-add">V-ADM-Projekte</span>
-                                    <span class="group-tag group-add">W-Laufwerk-Projekte</span>
-                                    <span class="group-tag group-add text-blue-800 bg-blue-100">V-Sonderprojekt-X (manuell)</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Sektion: Admin-Credentials -->
-                        <div>
-                             <h4 class="font-semibold text-slate-700">3. Admin-Anmeldedaten</h4>
-                             <div class="grid grid-cols-2 gap-4 mt-1">
-                                 <div>
-                                    <label for="admin-user" class="text-sm font-medium text-slate-600 block mb-1">Admin-Benutzer</label>
-                                    <input type="text" id="admin-user" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
-                                </div>
-                                <div>
-                                    <label for="admin-pass" class="text-sm font-medium text-slate-600 block mb-1">Passwort</label>
-                                    <input type="password" id="admin-pass" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
-                                </div>
-                             </div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button class="flex items-center justify-center px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button>
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Linke Spalte -->
+                <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+                    <div class="bg-white rounded-xl border border-slate-200 p-4 flex-grow">
+                         <h3 class="font-semibold text-slate-800 mb-3 px-2">Anstehende Aufgaben (<span id="task-count">3</span>)</h3>
+                         <div id="task-list" class="space-y-2">
+                            <div id="task-onboarding" onclick="selectTask('onboarding')" class="p-3 rounded-lg border-2 cursor-pointer task-item-active"><div class="flex justify-between items-center"><p class="font-semibold text-sky-800">Uservorname1 Usernachname1</p><span class="px-2 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">Einstellung</span></div></div>
+                            <div id="task-transfer" onclick="selectTask('transfer')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold text-slate-800">Uservorname5 Usernachname5</p><span class="px-2 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Versetzung</span></div></div>
+                            <div id="task-offboarding" onclick="selectTask('offboarding')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold text-slate-800">Uservorname3 Usernachname3</p><span class="px-2 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">Austritt</span></div></div>
+                         </div>
                     </div>
                 </div>
 
-                <!-- TRANSFER (VERSETZUNG) PANEL -->
-                <div id="panel-transfer" class="action-panel hidden bg-white rounded-xl border border-slate-200">
-                    <div class="p-5 border-b border-slate-200">
-                        <h3 class="text-lg font-bold text-slate-900">Versetzungs-Aktion: Uservorname5 Usernachname5</h3>
-                    </div>
-                    <div class="p-5 space-y-6">
-                        <div class="grid grid-cols-2 gap-6">
-                             <!-- Zu entfernende Gruppen -->
-                            <div>
-                                <h4 class="font-semibold text-slate-700">Zu entfernende Gruppen (aus alter Rolle)</h4>
-                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
-                                    <span class="group-tag group-remove">V-ADM-Projekte</span>
-                                    <span class="group-tag group-remove">W-Laufwerk-Projekte</span>
+                <!-- Rechte Spalte -->
+                <div class="col-span-12 lg:col-span-8">
+                    <!-- ONBOARDING PANEL -->
+                    <div id="panel-onboarding" class="action-panel bg-white rounded-xl border border-slate-200">
+                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Onboarding: Uservorname1 Usernachname1</h3></div>
+                        <div class="p-5 space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="space-y-4"><h4 class="font-semibold">1. Berechtigungen festlegen</h4>
+                                    <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" placeholder="mustermann_m" class="w-full mt-1 p-2 border rounded-md"></div>
+                                    <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" placeholder="Gruppe eingeben + Enter" class="w-full mt-1 p-2 border rounded-md"></div>
                                 </div>
-                            </div>
-                            <!-- Hinzuzufügende Gruppen -->
-                            <div>
-                                <h4 class="font-semibold text-slate-700">Hinzuzufügende Gruppen (für neue Rolle)</h4>
-                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
-                                    <span class="group-tag group-add">V-IT-Support</span>
-                                    <span class="group-tag group-add">V-IT-Admin-Tools</span>
-                                    <span class="group-tag group-add">W-Laufwerk-IT</span>
+                                <div><h4 class="font-semibold">2. Resultierende Gruppen (Vorschau)</h4>
+                                    <div id="preview-groups-container" class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1 flex flex-col gap-2"></div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                             <h4 class="font-semibold text-slate-700">Admin-Anmeldedaten</h4>
-                             <!-- Admin-Credentials Form here -->
-                        </div>
+                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button></div>
                     </div>
-                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button class="flex items-center justify-center px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button>
-                    </div>
-                </div>
 
-                <!-- OFFBOARDING PANEL -->
-                <div id="panel-offboarding" class="action-panel hidden bg-white rounded-xl border border-slate-200">
-                     <div class="p-5 border-b border-slate-200">
-                        <h3 class="text-lg font-bold text-slate-900">Offboarding-Aktion: Uservorname3 Usernachname3</h3>
-                    </div>
-                    <div class="p-5 space-y-6">
-                         <div>
-                            <h4 class="font-semibold text-slate-700">Aktuelle Gruppenmitgliedschaften (werden entfernt)</h4>
-                            <div class="bg-slate-50 p-3 rounded-lg border overflow-y-auto space-y-2 mt-1">
-                                <span class="group-tag group-neutral">V-Labor-Allgemein</span>
-                                <span class="group-tag group-neutral">V-Innovationsmanagement</span>
-                                <span class="group-tag group-neutral">W-Laufwerk-Innovation</span>
+                    <!-- TRANSFER PANEL (WIEDERHERGESTELLT) -->
+                     <div id="panel-transfer" class="action-panel hidden bg-white rounded-xl border border-slate-200">
+                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Versetzung: Uservorname5 Usernachname5</h3></div>
+                        <div class="p-5 space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div><h4 class="font-semibold">Zu entfernende Gruppen</h4>
+                                    <div id="transfer-remove-groups" class="bg-slate-50 p-3 rounded-lg border h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                </div>
+                                <div><h4 class="font-semibold">Hinzuzufügende Gruppen</h4>
+                                    <div id="transfer-add-groups" class="bg-slate-50 p-3 rounded-lg border h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                </div>
                             </div>
                         </div>
-                         <div>
-                             <h4 class="font-semibold text-slate-700">Admin-Anmeldedaten</h4>
-                             <!-- Admin-Credentials Form here -->
+                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button></div>
+                     </div>
+                     
+                     <!-- OFFBOARDING PANEL (WIEDERHERGESTELLT) -->
+                     <div id="panel-offboarding" class="action-panel hidden bg-white rounded-xl border border-slate-200">
+                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Austritt: Uservorname3 Usernachname3</h3></div>
+                         <div class="p-5 space-y-6">
+                             <div><h4 class="font-semibold">Folgende Gruppen & Zugänge werden entfernt</h4>
+                                <div id="offboarding-remove-groups" class="bg-slate-50 p-3 rounded-lg border mt-1 space-y-2 flex flex-col gap-2"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button class="flex items-center justify-center px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Offboarding starten</button>
-                    </div>
+                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Austritt durchführen</button></div>
+                     </div>
                 </div>
-
             </div>
         </div>
+
+        <!-- Admin-Leiste am unteren Rand -->
+        <footer class="w-full max-w-[1600px] mx-auto p-4 mt-6">
+            <div class="bg-white rounded-xl border border-slate-200 p-4">
+                <div class="grid grid-cols-12 items-center gap-4">
+                    <div class="col-span-2"><h3 class="font-semibold text-slate-800">Globale Admin-Anmeldedaten</h3></div>
+                    <div class="col-span-3"><input type="text" id="global-admin-user" placeholder="Admin-Benutzer" class="w-full p-2 border rounded-md"></div>
+                    <div class="col-span-3"><input type="password" id="global-admin-pass" placeholder="Passwort" class="w-full p-2 border rounded-md"></div>
+                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium text-slate-600">Credentials-Status</span><div id="cred-status" class="status-dot status-neutral"></div></div>
+                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium text-slate-600">AD-Verbindung</span><div id="ad-status" class="status-dot status-ok"></div></div>
+                </div>
+            </div>
+        </footer>
     </div>
+
 
     <script>
         lucide.createIcons();
 
-        const panels = document.querySelectorAll('.action-panel');
-        const taskItems = document.querySelectorAll('#task-list > div');
+        // --- Globale Elemente ---
+        const credStatusDot = document.getElementById('cred-status');
+        const globalAdminPassInput = document.getElementById('global-admin-pass');
+        globalAdminPassInput.addEventListener('input', () => {
+            credStatusDot.className = globalAdminPassInput.value.length > 0 ? 'status-dot status-ok' : 'status-dot status-neutral';
+        });
 
-        function selectTask(taskType) {
-            // Hide all panels
-            panels.forEach(p => p.classList.add('hidden'));
-            
-            // Deactivate all task items
-            taskItems.forEach(t => t.classList.remove('task-item-active'));
+        // --- Onboarding ---
+        const templateUserInput = document.getElementById('template-user-on');
+        const additionalGroupsInput = document.getElementById('additional-groups-input');
+        const previewContainer = document.getElementById('preview-groups-container');
+        
+        templateUserInput.addEventListener('blur', () => populateOnboardingPreview(true));
+        additionalGroupsInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                e.preventDefault();
+                addGroup(previewContainer, e.target.value.trim(), 'blue');
+                e.target.value = '';
+            }
+        });
 
-            // Show selected panel
-            document.getElementById(`panel-${taskType}`).classList.remove('hidden');
-
-            // Activate selected task item
-            document.getElementById(`task-${taskType}`).classList.add('task-item-active');
+        function populateOnboardingPreview(fromTemplate) {
+            if(fromTemplate) {
+                previewContainer.innerHTML = ''; 
+                const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
+                mockTemplateGroups.forEach(group => addGroup(previewContainer, group, 'green'));
+            }
+            if (previewContainer.childElementCount === 0) {
+                 previewContainer.innerHTML = '<p class="text-sm text-slate-400 m-auto">Gruppen erscheinen hier...</p>';
+            }
         }
+        
+        // --- Transfer ---
+        function populateTransferPanels() {
+            const removeContainer = document.getElementById('transfer-remove-groups');
+            const addContainer = document.getElementById('transfer-add-groups');
+            removeContainer.innerHTML = '';
+            addContainer.innerHTML = '';
+            ['V-ADM-Projekte', 'W-Laufwerk-Projekte'].forEach(g => addGroup(removeContainer, g, 'red'));
+            ['V-IT-Support', 'V-IT-Admin-Tools'].forEach(g => addGroup(addContainer, g, 'green'));
+        }
+
+        // --- Offboarding ---
+        function populateOffboardingPanel() {
+            const container = document.getElementById('offboarding-remove-groups');
+            container.innerHTML = '';
+            ['V-Labor-Allgemein', 'V-Innovationsmanagement'].forEach(g => addGroup(container, g, 'red'));
+        }
+
+        /** Generische Funktion zum Hinzufügen/Entfernen von Gruppen */
+        function addGroup(container, name, color) {
+            const placeholder = container.querySelector('p');
+            if (placeholder) placeholder.remove();
+            
+            const uniqueId = `group-${container.id}-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+            if (document.getElementById(uniqueId)) return;
+
+            const tag = document.createElement('div');
+            tag.id = uniqueId;
+            tag.className = `group-tag w-fit group-${color}`;
+            
+            const span = document.createElement('span');
+            span.textContent = name;
+            const removeIcon = document.createElement('i');
+            removeIcon.setAttribute('data-lucide', 'x');
+            removeIcon.className = 'remove-icon h-3 w-3';
+            
+            // KORRIGIERT: Event Listener für das Löschen
+            removeIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tag.remove();
+                if (container.childElementCount === 0) {
+                     container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Keine Gruppen.</p>';
+                }
+            });
+
+            tag.appendChild(span);
+            tag.appendChild(removeIcon);
+            container.appendChild(tag);
+            lucide.createIcons({nodes: [removeIcon]});
+        }
+        
+        // --- Globale Panel-Auswahl ---
+        function selectTask(taskType) {
+            document.querySelectorAll('.action-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('#task-list > div').forEach(t => t.classList.remove('task-item-active'));
+            
+            const panel = document.getElementById(`panel-${taskType}`);
+            const taskItem = document.getElementById(`task-${taskType}`);
+            
+            if(panel && taskItem) {
+                panel.classList.remove('hidden');
+                taskItem.classList.add('task-item-active');
+            }
+
+            // Panels mit Inhalten füllen, wenn sie ausgewählt werden
+            if (taskType === 'onboarding') {
+                populateOnboardingPreview(true);
+            } else if (taskType === 'transfer') {
+                populateTransferPanels();
+            } else if (taskType === 'offboarding') {
+                populateOffboardingPanel();
+            }
+        }
+
+        // Initialen Zustand beim Laden der Seite herstellen
+        selectTask('onboarding');
+
     </script>
 </body>
 </html>
