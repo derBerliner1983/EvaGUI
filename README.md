@@ -1,112 +1,185 @@
-# EvaGUI - Grafische Oberfläche für Personalmaßnahmen
+Projekt: Nexus (User-Management-Tool)
+Nexus ist eine Desktop-Anwendung zur teilautomatisierten Verwaltung von Benutzerkonten und Berechtigungen im Active Directory. Sie wurde entwickelt, um die Prozesse für Eintritte, Austritte und Versetzungen (EVA) bei Labor Berlin zu beschleunigen, Fehler zu reduzieren und die IT-Abteilung zu entlasten.
 
-## Projektübersicht
+1. Problemstellung & Anwendungsfall
+Aktuell basiert die Verwaltung von Personalmaßnahmen oft auf manuell ausgewerteten Excel-Listen, um die notwendigen IT-Prozesse anzustoßen. Dies ist zeitaufwendig und fehleranfällig.
 
-Dieses Projekt zielt darauf ab, Personalprozesse bei Labor Berlin zu vereinfachen und zu automatisieren, insbesondere:
-- Eintritten
-- Austritten 
-- Versetzungen (EVA)
+Beispiel-Datenbasis: Personalmaßnahmen Januar 2025 (Anonymisiert)
 
-Die Lösung bietet eine grafische Benutzeroberfläche (GUI), die bestehende PowerShell-Skripte für Onboarding und Offboarding ansteuert.
+Datum
 
-## 1. Problemstellung
+Personalnummer
 
-Aktuell basiert die Verwaltung von Personalmaßnahmen oft auf manuell ausgewerteten Excel-Listen, um IT-Prozesse anzustoßen.
+Mitarbeiter
 
-### Personalmaßnahmen Januar 2025 (Anonymisiert)
+Abteilung
 
-| Datum | Personalnummer | Mitarbeiter | Kostenstelle | Abteilung | Vorgesetzter | Maßnahmenart | Maßnahmegrund |
-|-------|----------------|-------------|--------------|-----------|--------------|--------------|---------------|
-| 01.01.2025 | 12345678 | Uservorname1 Usernachname1 | 10002000 | ADM S Projektmanagement | Vorgesetzter1 Nachname1 | Einstellung | - |
-| 01.01.2025 | 75435786 | Uservorname2 Usernachname2 | 10002001 | END Stoffwechseldiagnostik | Vorgesetzter2 Nachname2 | Wiedereinstellung | - |
-| 01.01.2025 | 23453543 | Uservorname3 Usernachname3 | 10002005 | Innovationsmanagement | Vorgesetzter3 Nachname3 | Austritt | - |
-| 02.01.2025 | 98765432 | Uservorname4 Usernachname4 | 10002002 | END Stoffwechseldiagnostik | Vorgesetzter2 Nachname2 | Einstellung | - |
-| 03.01.2025 | 45678901 | Uservorname5 Usernachname5 | 10002003 | ADM S Projektmanagement | Vorgesetzter1 Nachname1 | Versetzung | Interne Umstrukturierung |
-| 05.01.2025 | 87654321 | Uservorname6 Usernachname6 | 10002004 | Qualitätsmanagement | Vorgesetzter4 Nachname4 | Austritt | Beendigung Probezeit |
-| 07.01.2025 | 11223344 | Uservorname7 Usernachname7 | 10002006 | IT-Abteilung | Vorgesetzter5 Nachname5 | Einstellung | - |
-| 08.01.2025 | 55667788 | Uservorname8 Usernachname8 | 10002007 | Innovationsmanagement | Vorgesetzter3 Nachname3 | Wiedereinstellung | - |
-| 10.01.2025 | 99887766 | Uservorname9 Usernachname9 | 10002008 | Labordiagnostik | Vorgesetzter6 Nachname6 | Einstellung | - |
-| 12.01.2025 | 33445566 | Uservorname10 Usernachname10 | 10002009 | ADM S Projektmanagement | Vorgesetzter1 Nachname1 | Austritt | Eigenkündigung |
-| 15.01.2025 | 77889900 | Uservorname11 Usernachname11 | 10002010 | END Stoffwechseldiagnostik | Vorgesetzter2 Nachname2 | Versetzung | Abteilungswechsel |
-| 18.01.2025 | 22334455 | Uservorname12 Usernachname12 | 10002011 | Qualitätsmanagement | Vorgesetzter4 Nachname4 | Einstellung | - |
-| 20.01.2025 | 66778899 | Uservorname13 Usernachname13 | 10002012 | IT-Abteilung | Vorgesetzter5 Nachname5 | Austritt | Befristung ausgelaufen |
+Maßnahmenart
 
-*Quelle: EVAListe_Januar_2025_final.xlsx*
+01.01.2025
 
-### Maßnahmenarten-Legende
+12345678
 
-- 🟢 **Einstellung**: Neue Mitarbeiter
-- 🟡 **Wiedereinstellung**: Rückkehrende Mitarbeiter
-- 🔴 **Austritt**: Ausscheidende Mitarbeiter
+Uservorname1 Usernachname1
 
-#### Anonymisierungshinweise
-- **Mitarbeiternamen**: zu `Uservorname[X] Usernachname[X]` anonymisiert
-- **Vorgesetztennamen**: zu `Vorgesetzter[X] Nachname[X]` anonymisiert
-- **Abteilungsbezeichnungen**: zur Lesbarkeit beibehalten
+ADM S Projektmanagement
 
-## 2. Technisches Konzept
+Einstellung
 
-### 2.1. Technologie
+01.01.2025
 
-- **Sprache:** C#
-- **Framework:** WPF (Windows Presentation Foundation)
+23453543
 
-**Begründung:** 
-- Ideale Wahl für moderne Windows-Desktopanwendungen
-- Exzellente GUI-Design-Werkzeuge
-- Nahtlose Integration zur Ausführung von PowerShell-Skripten
+Uservorname3 Usernachname3
 
-### 2.2. Kernprinzip: Dynamische Skript-Anpassung
+Innovationsmanagement
 
-Der Ansatz basiert auf drei Hauptschritten:
+Austritt
 
-1. **Laden:** PowerShell-Skript als Textdatei einlesen
-2. **Anpassen im Speicher:** Interaktive Befehle durch statische Werte ersetzen
-3. **Ausführen:** Modifizierten Skript-Text in PowerShell-Instanz ausführen
+03.01.2025
 
-Vorteile:
-- Flexibel
-- Wartbar
-- Keine Änderungen an bestehenden Automatisierungsskripten erforderlich
+45678901
 
-## 3. Implementierungsdetails
+Uservorname5 Usernachname5
 
-### 3.1. Komponenten
+ADM S Projektmanagement
 
-1. **PowerShell-Skript (unverändert):** 
-   - Enthält originale Automatisierungslogik
-   - Interaktive Eingabeaufforderungen
+Versetzung
 
-2. **WPF Benutzeroberfläche:**
-   - Formular zur Dateneingabe
-   - Dynamische Skript-Ausführung
-   - Ausgabe-Logging
+05.01.2025
 
-3. **C#-Logik:**
-   - Skript-Modifikation zur Laufzeit
-   - Nahtlose PowerShell-Skript-Ausführung
-   - Fehlerbehandlung und Benutzer-Feedback
+87654321
 
-## Technische Anforderungen
+Uservorname6 Usernachname6
 
-- NuGet-Paket: `System.Management.Automation`
-- .NET-Framework mit WPF-Unterstützung
-- PowerShell-Ausführungsumgebung
+Qualitätsmanagement
 
-## Hauptvorteile
+Austritt
 
-- ✅ Benutzerfreundliche Oberfläche
-- ✅ Automatisierung von Personalmaßnahmen
-- ✅ Keine Änderungen an bestehenden Skripten
-- ✅ Zentralisierte Prozesssteuerung
-- ✅ Fehlerprotokollierung und -behandlung
+07.01.2025
 
-## Hinweis zur Implementierung
+11223344
 
-Der Quellcode ist so gestaltet, dass er:
-- Sicher arbeitet
-- Eingaben validiert
-- Fehler abfängt
-- Benutzerfreundlich ist
+Uservorname7 Usernachname7
 
-**Wichtig:** Pfade und Konfigurationen müssen an die spezifische Umgebung angepasst werden.
+IT-Abteilung
+
+Einstellung
+
+...
+
+...
+
+...
+
+...
+
+...
+
+Quelle: EVAListe_Januar_2025_final.xlsx
+
+Ziel von Nexus ist es, die Verarbeitung dieser Daten sowie die manuelle Eingabe von Einzelfällen über eine benutzerfreundliche, sichere und effiziente Oberfläche zu ermöglichen.
+
+2. Design- & Funktionskonzept
+Das Design folgt dem "Desktop-First"-Ansatz und ist für eine schnelle und übersichtliche Bedienung auf PC-Monitoren optimiert.
+
+2.1. Layout-Philosophie
+
+Das Layout ist in drei primäre Zonen aufgeteilt, um einen klaren Arbeitsfluss zu gewährleisten:
+
+Aufgabenliste (Links): Eine zentrale Liste zeigt alle anstehenden Personalmaßnahmen. Dies ist der Ausgangspunkt jeder Aktion. Ein Zähler zeigt die Gesamtzahl der offenen Aufgaben.
+
+Aktions-Panel (Rechts): Der Hauptarbeitsbereich. Er ist kontextsensitiv und passt sich an die ausgewählte Aufgabe an (Einstellung, Versetzung, Austritt).
+
+Globale Admin-Leiste (Unten): Eine persistente Leiste am unteren Rand des Fensters zur einmaligen Eingabe der Admin-Credentials pro Sitzung. Dies verhindert redundante Eingaben und entkoppelt die Authentifizierung von der eigentlichen Aufgabe.
+
+2.2. Farbpalette & Bedeutung
+
+Die Farbgebung dient der intuitiven Nutzerführung und gibt sofortiges visuelles Feedback über den Status und die Art von Informationen.
+
+Primärfarbe (Himmelblau):
+
+Verwendung: Aktive Elemente, Hervorhebungen, Links.
+
+Bedeutung: Klarheit, Vertrauen, Technologie. Führt den Blick des Nutzers und signalisiert Interaktivität.
+
+Status- & Aktionsfarben:
+
+Grün: Standard- & Vorlagen-Gruppen. Signalisiert "sicher", "Standard", "hinzugefügt".
+
+Blau: Manuell hinzugefügte Gruppen. Signalisiert eine bewusste, nutzerdefinierte Ergänzung.
+
+Rot: Zu entfernende Gruppen. Signalisiert "Achtung", "Löschen", "Gefahr". Wird bei Austritten und Versetzungen verwendet.
+
+Gelb: Versetzungen. Signalisiert eine Änderung oder einen Übergangszustand.
+
+Status-Punkte:
+
+● Grün: Status OK (z.B. AD-Verbindung steht, Credentials gültig).
+
+● Grau/Neutral: Status unbekannt oder keine Eingabe erfolgt.
+
+● Rot: Fehler (z.B. AD nicht erreichbar, falsches Passwort).
+
+2.3. Kernfunktionen
+
+Zentrale Aufgabenliste: Alle Personalmaßnahmen auf einen Blick.
+
+Kontextsensitive Aktions-Panels: Die Oberfläche passt sich der gewählten Aufgabe an.
+
+Interaktive Gruppen-Vorschau:
+
+Gruppen aus Vorlagen werden automatisch geladen.
+
+Manuelle Ergänzung von Gruppen per Enter-Eingabe.
+
+Einzelnes Entfernen von Gruppen (Standard oder manuell) per Klick auf das (x)-Symbol vor der finalen Ausführung.
+
+Zentrale Admin-Authentifizierung: Einmalige Eingabe der Admin-Daten pro Sitzung.
+
+Visuelle Status-Indikatoren: Live-Feedback über die Erreichbarkeit von Systemen (AD) und die Gültigkeit der Anmeldedaten.
+
+Datenimport: Einlesen von Personalmaßnahmen aus einer Excel-Datei.
+
+Manuelle Erfassung: Möglichkeit, einzelne Fälle direkt in der GUI anzulegen.
+
+3. Technisches Konzept
+3.1. Technologie-Stack
+
+Sprache: C#
+
+Framework: WPF (Windows Presentation Foundation)
+
+Kern-Integration: System.Management.Automation (zur nativen Ausführung von PowerShell-Skripten)
+
+3.2. Architektur: Dynamische Skript-Anpassung
+
+Der Ansatz basiert auf drei Hauptschritten, um die bestehenden PowerShell-Skripte unverändert zu lassen:
+
+Laden: Das PowerShell-Skript wird zur Laufzeit als reine Textdatei in die Anwendung geladen.
+
+Anpassen im Speicher: Interaktive Befehle (z.B. Get-Credential, Read-Host) werden im Text durch die statischen Werte aus der GUI ersetzt.
+
+Ausführen: Der modifizierte Skript-Text wird in einer gekapselten PowerShell-Instanz ausgeführt und die Ausgaben werden zur Anzeige in der GUI abgefangen.
+
+3.3. Technische Anforderungen
+
+.NET-Framework mit WPF-Unterstützung
+
+NuGet-Paket: System.Management.Automation
+
+PowerShell-Ausführungsumgebung auf dem Client-Rechner
+
+4. Hauptvorteile
+✅ Benutzerfreundlichkeit: Intuitive Oberfläche statt manueller Skript-Ausführung.
+
+✅ Prozesssicherheit: Reduzierung von Fehlern durch geführte Eingaben und Automatisierung.
+
+✅ Effizienz: Beschleunigung der wiederkehrenden EVA-Prozesse.
+
+✅ Keine Skript-Anpassung: Bestehende und bewährte PowerShell-Skripte können ohne Änderung weiterverwendet werden.
+
+✅ Zentralisierung: Alle Aufgaben werden an einem Ort gebündelt und abgearbeitet.
+
+✅ Transparenz: Klare Protokollierung und Fehleranzeige direkt in der Anwendung.
+
