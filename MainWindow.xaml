@@ -1,0 +1,222 @@
+<!-- 
+========================================================================================
+ MainWindow.xaml - Native WPF-Implementierung des Nexus UI-Konzepts
+========================================================================================
+ HINWEISE:
+ 1. Dies ist die XAML-Datei für die Benutzeroberfläche. Die gesamte Logik (z.B. was 
+    passiert, wenn ein Button geklickt wird) muss in der zugehörigen C#-Datei 
+    (MainWindow.xaml.cs) implementiert werden.
+ 2. Icons: Für die Icons (z.B. 'shield-check') werden hier Platzhalter-Pfade verwendet.
+    In einem echten Projekt würden Sie eine Icon-Bibliothek wie 'MahApps.Metro.IconPacks'
+    verwenden oder die SVG-Pfade direkt einfügen.
+ 3. Styling: Die Farben und Stile sind direkt im XAML definiert, um die Logik aus der
+    HTML-Vorlage nachzubilden.
+========================================================================================
+-->
+<Window x:Class="Nexus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nexus"
+        mc:Ignorable="d"
+        Title="Nexus - User Management" Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        Background="#F1F5F9">
+
+    <!-- Definition von wiederverwendbaren Stilen und Farben -->
+    <Window.Resources>
+        <!-- Farben aus dem Design-Konzept -->
+        <SolidColorBrush x:Key="ColorGreen" Color="#DCFCE7"/>
+        <SolidColorBrush x:Key="ColorGreenForeground" Color="#166534"/>
+        <SolidColorBrush x:Key="ColorBlue" Color="#CFFAFE"/>
+        <SolidColorBrush x:Key="ColorBlueForeground" Color="#0E7490"/>
+        <SolidColorBrush x:Key="ColorRed" Color="#FEE2E2"/>
+        <SolidColorBrush x:Key="ColorRedForeground" Color="#991B1B"/>
+        <SolidColorBrush x:Key="ColorSlate" Color="#F1F5F9"/>
+        
+        <!-- Basis-Stil für Buttons -->
+        <Style TargetType="Button" x:Key="BaseButton">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Stil für den primären Button (z.B. Manuell hinzufügen) -->
+        <Style TargetType="Button" x:Key="PrimaryButton" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="#0EA5E9"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#0EA5E9"/>
+        </Style>
+        
+        <!-- Stil für den sekundären Button (z.B. Excel importieren) -->
+        <Style TargetType="Button" x:Key="SecondaryButton" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+        </Style>
+        
+        <!-- Stil für die Gruppen-Tags -->
+        <Style TargetType="Border" x:Key="GroupTag">
+            <Setter Property="Padding" Value="10,3"/>
+            <Setter Property="CornerRadius" Value="99"/>
+        </Style>
+    </Window.Resources>
+    
+    <!-- Haupt-Layout-Container -->
+    <DockPanel>
+        <!-- UNTERE ADMIN-LEISTE (entspricht dem <footer>) -->
+        <Border DockPanel.Dock="Bottom" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="15" Margin="10,0,10,10" CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Globale Admin-Anmeldedaten" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" Margin="15,0" Padding="5" />
+                <PasswordBox Grid.Column="2" Padding="5"/>
+                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
+                    <TextBlock Text="Credentials:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Ellipse Width="10" Height="10" Fill="Gray" ToolTip="Status der Anmeldedaten"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="AD-Verbindung:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <Ellipse Width="10" Height="10" Fill="Green" ToolTip="Status der Active Directory Verbindung"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Haupt-Content-Bereich -->
+        <Grid Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/> <!-- Linke Spalte -->
+                <ColumnDefinition Width="8*"/> <!-- Rechte Spalte -->
+            </Grid.ColumnDefinitions>
+
+            <!-- LINKE SPALTE -->
+            <DockPanel Grid.Column="0" Margin="0,0,10,0">
+                <!-- Header -->
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                     <!-- Icon Platzhalter -->
+                    <Path Data="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" Stroke="#0EA5E9" StrokeThickness="2" Width="24" Height="24" Stretch="Uniform"/>
+                    <TextBlock Text="Nexus" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+
+                <!-- Aufgabenliste -->
+                <Border Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Anstehende Aufgaben (3)" FontWeight="SemiBold" Margin="5,5,5,10"/>
+                        <!-- Die ListBox enthält die Aufgaben. Das Aussehen wird durch ein ItemTemplate definiert. -->
+                        <ListBox Name="TaskList" BorderThickness="0" Background="Transparent">
+                            <!-- Beispiel-Item 1 (Onboarding) -->
+                            <ListBoxItem Name="TaskOnboarding" IsSelected="True" Margin="0,0,0,5">
+                                <Border BorderBrush="#38BDF8" BorderThickness="2" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="Uservorname1 Usernachname1" FontWeight="SemiBold" Foreground="#0C4A6E"/>
+                                            <Border Grid.Column="1" Style="{StaticResource GroupTag}" Background="#D1FAE5"><TextBlock Text="Einstellung" Foreground="#065F46" FontSize="11"/></Border>
+                                        </Grid>
+                                        <TextBlock Text="ADM S Projektmanagement" Foreground="Gray" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </ListBoxItem>
+                             <!-- Beispiel-Item 2 (Versetzung) -->
+                            <ListBoxItem Name="TaskTransfer" Margin="0,0,0,5">
+                                 <Border BorderBrush="Transparent" BorderThickness="2" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="Uservorname5 Usernachname5" FontWeight="SemiBold"/>
+                                            <Border Grid.Column="1" Style="{StaticResource GroupTag}" Background="#FEF9C3"><TextBlock Text="Versetzung" Foreground="#854D0E" FontSize="11"/></Border>
+                                        </Grid>
+                                        <TextBlock Text="Wechsel zu: IT-Abteilung" Foreground="Gray" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </ListBoxItem>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
+
+            <!-- RECHTE SPALTE -->
+            <Grid Grid.Column="1">
+                <!-- ONBOARDING PANEL -->
+                <Border Name="PanelOnboarding" Background="White" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="15" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                            <TextBlock Text="Onboarding: Uservorname1 Usernachname1" FontSize="16" FontWeight="Bold"/>
+                        </Border>
+                         <Border DockPanel.Dock="Bottom" Padding="10" Background="{StaticResource ColorSlate}" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+                            <Button Content="Onboarding starten" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Background="#16A34A" BorderBrush="#16A34A"/>
+                        </Border>
+                        
+                        <!-- Content des Onboarding-Panels -->
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <!-- Linke Hälfte: Eingaben -->
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="1. Berechtigungen festlegen" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <TextBlock Text="Vorlagen-User"/>
+                                <TextBox Margin="0,5,0,10" Padding="5"/>
+                                <TextBlock Text="Zusätzliche Gruppen"/>
+                                <TextBox Margin="0,5,0,0" Padding="5" ToolTip="Gruppe eingeben und Enter drücken"/>
+                            </StackPanel>
+                            <!-- Rechte Hälfte: Vorschau -->
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="2. Resultierende Gruppen (Vorschau)" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <Border Background="{StaticResource ColorSlate}" CornerRadius="6" Padding="10" MinHeight="150">
+                                    <!-- ItemsControl zum Anzeigen der Gruppen-Tags -->
+                                    <ItemsControl Name="PreviewGroupsItemsControl">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <!-- Beispiel-Gruppen -->
+                                        <Border Style="{StaticResource GroupTag}" Background="{StaticResource ColorGreen}" Margin="2">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="V-Labor-Allgemein" Foreground="{StaticResource ColorGreenForeground}"/>
+                                                <TextBlock Text=" X" Foreground="Gray" Margin="5,0,0,0" Cursor="Hand" ToolTip="Entfernen"/>
+                                            </StackPanel>
+                                        </Border>
+                                         <Border Style="{StaticResource GroupTag}" Background="{StaticResource ColorBlue}" Margin="2">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Sonder-Gruppe" Foreground="{StaticResource ColorBlueForeground}"/>
+                                                <TextBlock Text=" X" Foreground="Gray" Margin="5,0,0,0" Cursor="Hand" ToolTip="Entfernen"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </DockPanel>
+                </Border>
+                
+                <!-- TRANSFER PANEL (Standardmäßig verborgen) -->
+                <Border Name="PanelTransfer" Visibility="Collapsed">
+                    <!-- Inhalt für das Transfer-Panel würde hier analog aufgebaut werden -->
+                </Border>
+                
+                <!-- OFFBOARDING PANEL (Standardmäßig verborgen) -->
+                <Border Name="PanelOffboarding" Visibility="Collapsed">
+                    <!-- Inhalt für das Offboarding-Panel würde hier analog aufgebaut werden -->
+                </setBorder>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>
