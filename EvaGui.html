@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvaGUI - Finale Professionelle UI-Vorlage (Final - Repariert)</title>
+    <title>Nexus - Finale UI-Vorlage (Vollständig korrigiert)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,110 +13,135 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
+
+        /* Light & Dark Theme Styles */
+        .dark .dark\:bg-slate-900 { background-color: #0f172a; }
+        .dark .dark\:bg-slate-800 { background-color: #1e293b; }
+        .dark .dark\:text-slate-200 { color: #e2e8f0; }
+        .dark .dark\:border-slate-700 { border-color: #334155; }
+        .dark .dark\:hover\:bg-slate-700:hover { background-color: #334155 !important; }
+        .dark .dark\:bg-slate-900\/50 { background-color: rgba(15, 23, 42, 0.5); }
+        .dark .dark\:border-slate-600 { border-color: #475569; }
+        .dark .dark\:hover\:bg-slate-700\/50:hover { background-color: rgba(51, 65, 85, 0.5); }
+        .dark .dark\:placeholder-slate-500::placeholder { color: #64748b; }
+        /* KORRIGIERT: Dark-Mode für die Footer der Panels */
+        .dark .dark\:bg-slate-800\/50 { background-color: rgba(30, 41, 59, 0.5); }
+
         .task-item-active { background-color: #e0f2fe; border-color: #38bdf8; }
+        .dark .task-item-active { background-color: #1e293b; border-color: #38bdf8; }
+        .dark .task-item-active .font-semibold { color: #e2e8f0; }
+
         .group-tag { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: 500; gap: 6px; }
         .group-tag .remove-icon { cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
         .group-tag:hover .remove-icon { opacity: 1; }
         
-        .group-green { background-color: #dcfce7; color: #166534; } /* Standard/Vorlage */
-        .group-blue { background-color: #cffafe; color: #0e7490; }  /* Manuell */
-        .group-red { background-color: #fee2e2; color: #991b1b; }    /* Zu entfernen */
+        .group-green { background-color: #dcfce7; color: #166534; }
+        .dark .group-green { background-color: #14532d; color: #bbf7d0; }
+        .group-blue { background-color: #cffafe; color: #0e7490; }
+        .dark .group-blue { background-color: #164e63; color: #a5f3fc; }
+        .group-red { background-color: #fee2e2; color: #991b1b; }
+        .dark .group-red { background-color: #7f1d1d; color: #fecaca; }
 
         .status-dot { width: 10px; height: 10px; border-radius: 50%; transition: background-color 0.3s ease; }
         .status-ok { background-color: #22c55e; }
-        .status-fail { background-color: #ef4444; }
         .status-neutral { background-color: #94a3b8; }
+        .dark .status-neutral { background-color: #475569; }
     </style>
 </head>
-<body class="bg-slate-100">
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
     <div class="flex flex-col h-screen">
         <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex-grow">
             <header class="flex items-center justify-between mb-6">
-                <div class="flex items-center"><i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i><h1 class="text-2xl font-bold ml-3 text-slate-800">EvaGUI</h1></div>
+                <div class="flex items-center"><i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i><h1 class="text-2xl font-bold ml-3">Nexus</h1></div>
                 <div class="flex items-center space-x-3">
-                    <button class="flex items-center justify-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
-                        <i data-lucide="file-up" class="h-4 w-4 mr-2"></i>
-                        Excel-Liste importieren
+                    <button class="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <i data-lucide="file-up" class="h-4 w-4 mr-2"></i> Excel-Liste importieren
                     </button>
-                    <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700 transition-colors">
-                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i>
-                        Manuell hinzufügen
+                    <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">
+                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i> Manuell hinzufügen
                     </button>
+                    <div class="relative">
+                        <button id="theme-toggle-button" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400">
+                            <i data-lucide="sun" class="block dark:hidden"></i>
+                            <i data-lucide="moon" class="hidden dark:block"></i>
+                        </button>
+                        <div id="theme-menu" class="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 hidden z-10">
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="light"><i data-lucide="sun" class="w-4 h-4"></i> Light</a>
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="dark"><i data-lucide="moon" class="w-4 h-4"></i> Dark</a>
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="system"><i data-lucide="monitor" class="w-4 h-4"></i> System</a>
+                        </div>
+                    </div>
                 </div>
             </header>
 
             <div class="grid grid-cols-12 gap-6">
                 <!-- Linke Spalte -->
                 <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                    <div class="bg-white rounded-xl border border-slate-200 p-4 flex-grow">
-                         <h3 class="font-semibold text-slate-800 mb-3 px-2">Anstehende Aufgaben (<span id="task-count">3</span>)</h3>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex-grow">
+                         <h3 class="font-semibold mb-3 px-2">Anstehende Aufgaben (<span id="task-count">3</span>)</h3>
                          <div id="task-list" class="space-y-2">
-                            <div id="task-onboarding" onclick="selectTask('onboarding')" class="p-3 rounded-lg border-2 cursor-pointer task-item-active"><div class="flex justify-between items-center"><p class="font-semibold text-sky-800">Uservorname1 Usernachname1</p><span class="px-2 py-0.5 text-xs font-medium text-green-800 bg-green-100 rounded-full">Einstellung</span></div></div>
-                            <div id="task-transfer" onclick="selectTask('transfer')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold text-slate-800">Uservorname5 Usernachname5</p><span class="px-2 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Versetzung</span></div></div>
-                            <div id="task-offboarding" onclick="selectTask('offboarding')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold text-slate-800">Uservorname3 Usernachname3</p><span class="px-2 py-0.5 text-xs font-medium text-red-800 bg-red-100 rounded-full">Austritt</span></div></div>
+                            <div id="task-onboarding" onclick="selectTask('onboarding')" class="p-3 rounded-lg border-2 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold text-sky-800">Uservorname1</p><span class="px-2 py-0.5 text-xs font-medium text-green-800 bg-green-100 dark:bg-green-900/50 dark:text-green-300 rounded-full">Einstellung</span></div></div>
+                            <div id="task-transfer" onclick="selectTask('transfer')" class="p-3 rounded-lg border-2 border-transparent hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold">Uservorname5</p><span class="px-2 py-0.5 text-xs font-medium text-yellow-800 bg-yellow-100 dark:bg-yellow-900/50 dark:text-yellow-300 rounded-full">Versetzung</span></div></div>
+                            <div id="task-offboarding" onclick="selectTask('offboarding')" class="p-3 rounded-lg border-2 border-transparent hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer"><div class="flex justify-between items-center"><p class="font-semibold">Uservorname3</p><span class="px-2 py-0.5 text-xs font-medium text-red-800 bg-red-100 dark:bg-red-900/50 dark:text-red-300 rounded-full">Austritt</span></div></div>
                          </div>
                     </div>
                 </div>
 
                 <!-- Rechte Spalte -->
                 <div class="col-span-12 lg:col-span-8">
-                    <!-- ONBOARDING PANEL -->
-                    <div id="panel-onboarding" class="action-panel bg-white rounded-xl border border-slate-200">
-                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Onboarding: Uservorname1 Usernachname1</h3></div>
+                    <!-- Panels -->
+                    <div id="panel-onboarding" class="action-panel bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700"><h3 class="text-lg font-bold">Onboarding: Uservorname1 Usernachname1</h3></div>
                         <div class="p-5 space-y-6">
                             <div class="grid grid-cols-2 gap-6">
                                 <div class="space-y-4"><h4 class="font-semibold">1. Berechtigungen festlegen</h4>
-                                    <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" placeholder="mustermann_m" class="w-full mt-1 p-2 border rounded-md"></div>
-                                    <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" placeholder="Gruppe eingeben + Enter" class="w-full mt-1 p-2 border rounded-md"></div>
+                                    <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500"></div>
+                                    <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500" placeholder="Gruppe eingeben + Enter"></div>
                                 </div>
                                 <div><h4 class="font-semibold">2. Resultierende Gruppen (Vorschau)</h4>
-                                    <div id="preview-groups-container" class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1 flex flex-col gap-2"></div>
+                                    <div id="preview-groups-container" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 overflow-y-auto mt-1 flex flex-col gap-2"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button></div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button></div>
                     </div>
-
-                    <!-- TRANSFER PANEL (WIEDERHERGESTELLT) -->
-                     <div id="panel-transfer" class="action-panel hidden bg-white rounded-xl border border-slate-200">
-                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Versetzung: Uservorname5 Usernachname5</h3></div>
+                     <div id="panel-transfer" class="action-panel hidden bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700"><h3 class="text-lg font-bold">Versetzung: Uservorname5 Usernachname5</h3></div>
                         <div class="p-5 space-y-6">
                             <div class="grid grid-cols-2 gap-6">
                                 <div><h4 class="font-semibold">Zu entfernende Gruppen</h4>
-                                    <div id="transfer-remove-groups" class="bg-slate-50 p-3 rounded-lg border h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                    <div id="transfer-remove-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
                                 </div>
-                                <div><h4 class="font-semibold">Hinzuzufügende Gruppen</h4>
-                                    <div id="transfer-add-groups" class="bg-slate-50 p-3 rounded-lg border h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                <div class="space-y-4"><h4 class="font-semibold">Hinzuzufügende Gruppen</h4>
+                                    <div id="transfer-add-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                    <input type="text" id="transfer-groups-input" placeholder="Gruppe eingeben + Enter" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900 dark:placeholder-slate-500">
                                 </div>
                             </div>
                         </div>
-                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button></div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button></div>
                      </div>
-                     
-                     <!-- OFFBOARDING PANEL (WIEDERHERGESTELLT) -->
-                     <div id="panel-offboarding" class="action-panel hidden bg-white rounded-xl border border-slate-200">
-                        <div class="p-5 border-b"><h3 class="text-lg font-bold">Austritt: Uservorname3 Usernachname3</h3></div>
+                     <div id="panel-offboarding" class="action-panel hidden bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700"><h3 class="text-lg font-bold">Austritt: Uservorname3 Usernachname3</h3></div>
                          <div class="p-5 space-y-6">
                              <div><h4 class="font-semibold">Folgende Gruppen & Zugänge werden entfernt</h4>
-                                <div id="offboarding-remove-groups" class="bg-slate-50 p-3 rounded-lg border mt-1 space-y-2 flex flex-col gap-2"></div>
+                                <div id="offboarding-remove-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mt-1 space-y-2 flex flex-col gap-2"></div>
                             </div>
                         </div>
-                        <div class="p-4 bg-slate-50 border-t flex justify-end"><button class="px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Austritt durchführen</button></div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Austritt durchführen</button></div>
                      </div>
                 </div>
             </div>
         </div>
 
-        <!-- Admin-Leiste am unteren Rand -->
         <footer class="w-full max-w-[1600px] mx-auto p-4 mt-6">
-            <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                 <div class="grid grid-cols-12 items-center gap-4">
-                    <div class="col-span-2"><h3 class="font-semibold text-slate-800">Globale Admin-Anmeldedaten</h3></div>
-                    <div class="col-span-3"><input type="text" id="global-admin-user" placeholder="Admin-Benutzer" class="w-full p-2 border rounded-md"></div>
-                    <div class="col-span-3"><input type="password" id="global-admin-pass" placeholder="Passwort" class="w-full p-2 border rounded-md"></div>
-                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium text-slate-600">Credentials-Status</span><div id="cred-status" class="status-dot status-neutral"></div></div>
-                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium text-slate-600">AD-Verbindung</span><div id="ad-status" class="status-dot status-ok"></div></div>
+                    <div class="col-span-2"><h3 class="font-semibold">Globale Admin-Anmeldedaten</h3></div>
+                    <div class="col-span-3"><input type="text" placeholder="Admin-Benutzer" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"></div>
+                    <div class="col-span-3"><input type="password" id="global-admin-pass" placeholder="Passwort" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-900"></div>
+                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium">Credentials</span><div id="cred-status" class="status-dot status-neutral"></div></div>
+                    <div class="col-span-2 flex items-center justify-end gap-3"><span class="text-sm font-medium">AD-Verbindung</span><div id="ad-status" class="status-dot status-ok"></div></div>
                 </div>
             </div>
         </footer>
@@ -124,58 +149,115 @@
 
 
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
 
-        // --- Globale Elemente ---
-        const credStatusDot = document.getElementById('cred-status');
-        const globalAdminPassInput = document.getElementById('global-admin-pass');
-        globalAdminPassInput.addEventListener('input', () => {
-            credStatusDot.className = globalAdminPassInput.value.length > 0 ? 'status-dot status-ok' : 'status-dot status-neutral';
+            // --- THEME SWITCHER LOGIC ---
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const themeMenu = document.getElementById('theme-menu');
+            const themeOptions = document.querySelectorAll('.theme-option');
+
+            themeToggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                themeMenu.classList.toggle('hidden');
+            });
+            
+            document.addEventListener('click', () => themeMenu.classList.add('hidden'));
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                lucide.createIcons();
+            };
+
+            const setSystemTheme = () => {
+                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('light');
+                }
+            };
+            
+            themeOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selectedTheme = e.currentTarget.dataset.theme;
+                    localStorage.setItem('theme', selectedTheme);
+                    
+                    if (selectedTheme === 'system') {
+                        setSystemTheme();
+                    } else {
+                        applyTheme(selectedTheme);
+                    }
+                });
+            });
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== 'system') {
+                applyTheme(savedTheme);
+            } else {
+                setSystemTheme();
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (localStorage.getItem('theme') === 'system' || !localStorage.getItem('theme')) {
+                    applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+
+            // --- FUNKTIONIERENDE LOGIK AUS VORHERIGER VERSION ---
+            const globalAdminPassInput = document.getElementById('global-admin-pass');
+            globalAdminPassInput.addEventListener('input', () => {
+                document.getElementById('cred-status').className = globalAdminPassInput.value.length > 0 ? 'status-dot status-ok' : 'status-dot status-neutral';
+            });
+
+            document.getElementById('template-user-on').addEventListener('blur', () => populateOnboardingPreview());
+            
+            document.getElementById('additional-groups-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                    e.preventDefault();
+                    addGroup(document.getElementById('preview-groups-container'), e.target.value.trim(), 'blue');
+                    e.target.value = '';
+                }
+            });
+
+            document.getElementById('transfer-groups-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                    e.preventDefault();
+                    addGroup(document.getElementById('transfer-add-groups'), e.target.value.trim(), 'blue');
+                    e.target.value = '';
+                }
+            });
+
+            selectTask('onboarding');
         });
 
-        // --- Onboarding ---
-        const templateUserInput = document.getElementById('template-user-on');
-        const additionalGroupsInput = document.getElementById('additional-groups-input');
-        const previewContainer = document.getElementById('preview-groups-container');
-        
-        templateUserInput.addEventListener('blur', () => populateOnboardingPreview(true));
-        additionalGroupsInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                e.preventDefault();
-                addGroup(previewContainer, e.target.value.trim(), 'blue');
-                e.target.value = '';
-            }
-        });
-
-        function populateOnboardingPreview(fromTemplate) {
-            if(fromTemplate) {
-                previewContainer.innerHTML = ''; 
-                const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
-                mockTemplateGroups.forEach(group => addGroup(previewContainer, group, 'green'));
-            }
-            if (previewContainer.childElementCount === 0) {
-                 previewContainer.innerHTML = '<p class="text-sm text-slate-400 m-auto">Gruppen erscheinen hier...</p>';
-            }
+        // --- ZENTRALE FUNKTIONEN ---
+        function populateOnboardingPreview() {
+            const container = document.getElementById('preview-groups-container');
+            container.innerHTML = ''; 
+            const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
+            mockTemplateGroups.forEach(group => addGroup(container, group, 'green'));
         }
         
-        // --- Transfer ---
         function populateTransferPanels() {
             const removeContainer = document.getElementById('transfer-remove-groups');
             const addContainer = document.getElementById('transfer-add-groups');
             removeContainer.innerHTML = '';
             addContainer.innerHTML = '';
             ['V-ADM-Projekte', 'W-Laufwerk-Projekte'].forEach(g => addGroup(removeContainer, g, 'red'));
-            ['V-IT-Support', 'V-IT-Admin-Tools'].forEach(g => addGroup(addContainer, g, 'green'));
+            ['V-IT-Support'].forEach(g => addGroup(addContainer, g, 'green'));
         }
 
-        // --- Offboarding ---
         function populateOffboardingPanel() {
             const container = document.getElementById('offboarding-remove-groups');
             container.innerHTML = '';
             ['V-Labor-Allgemein', 'V-Innovationsmanagement'].forEach(g => addGroup(container, g, 'red'));
         }
 
-        /** Generische Funktion zum Hinzufügen/Entfernen von Gruppen */
         function addGroup(container, name, color) {
             const placeholder = container.querySelector('p');
             if (placeholder) placeholder.remove();
@@ -193,7 +275,6 @@
             removeIcon.setAttribute('data-lucide', 'x');
             removeIcon.className = 'remove-icon h-3 w-3';
             
-            // KORRIGIERT: Event Listener für das Löschen
             removeIcon.addEventListener('click', (e) => {
                 e.stopPropagation();
                 tag.remove();
@@ -208,7 +289,6 @@
             lucide.createIcons({nodes: [removeIcon]});
         }
         
-        // --- Globale Panel-Auswahl ---
         function selectTask(taskType) {
             document.querySelectorAll('.action-panel').forEach(p => p.classList.add('hidden'));
             document.querySelectorAll('#task-list > div').forEach(t => t.classList.remove('task-item-active'));
@@ -221,19 +301,14 @@
                 taskItem.classList.add('task-item-active');
             }
 
-            // Panels mit Inhalten füllen, wenn sie ausgewählt werden
             if (taskType === 'onboarding') {
-                populateOnboardingPreview(true);
+                populateOnboardingPreview();
             } else if (taskType === 'transfer') {
                 populateTransferPanels();
             } else if (taskType === 'offboarding') {
                 populateOffboardingPanel();
             }
         }
-
-        // Initialen Zustand beim Laden der Seite herstellen
-        selectTask('onboarding');
-
     </script>
 </body>
 </html>
