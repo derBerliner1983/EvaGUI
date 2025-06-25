@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvaGUI - Desktop-Optimiertes UI-Konzept (V3)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .task-item-active { background-color: #e0f2fe; border-color: #38bdf8; }
+        .group-tag { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 0.8rem; font-weight: 500; }
+        .group-add { background-color: #dcfce7; color: #166534; }
+        .group-remove { background-color: #fee2e2; color: #991b1b; }
+        .group-neutral { background-color: #e0e7ff; color: #3730a3; }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- ===== App Header ===== -->
+        <header class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                <i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i>
+                <h1 class="text-2xl font-bold ml-3 text-slate-800">EvaGUI</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="flex items-center justify-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                    <i data-lucide="file-up" class="h-4 w-4 mr-2"></i>
+                    Excel-Liste importieren
+                </button>
+                <button class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700 transition-colors">
+                    <i data-lucide="plus" class="h-4 w-4 mr-2"></i>
+                    Manuell hinzufügen
+                </button>
+            </div>
+        </header>
+
+        <!-- ===== Main Content Grid ===== -->
+        <div class="grid grid-cols-12 gap-6">
+            
+            <!-- ===== Linke Spalte: Aufgabenliste ===== -->
+            <div class="col-span-12 lg:col-span-4 bg-white rounded-xl border border-slate-200 p-4">
+                 <h3 class="font-semibold text-slate-800 mb-3 px-2">Anstehende Aufgaben</h3>
+                 <div id="task-list" class="space-y-2">
+                     <!-- Onboarding Item (Selected) -->
+                    <div id="task-onboarding" onclick="selectTask('onboarding')" class="p-3 rounded-lg border-2 cursor-pointer task-item-active">
+                        <div class="flex justify-between items-center">
+                            <p class="font-semibold text-sky-800">Uservorname1 Usernachname1</p>
+                            <span class="group-tag group-add">Einstellung</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-1">ADM S Projektmanagement</p>
+                    </div>
+                     <!-- Versetzung Item -->
+                    <div id="task-transfer" onclick="selectTask('transfer')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer">
+                       <div class="flex justify-between items-center">
+                            <p class="font-semibold text-slate-800">Uservorname5 Usernachname5</p>
+                            <span class="group-tag group-neutral" style="background-color: #fef9c3; color: #854d0e;">Versetzung</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-1">Wechsel zu: IT-Abteilung</p>
+                    </div>
+                     <!-- Offboarding Item -->
+                    <div id="task-offboarding" onclick="selectTask('offboarding')" class="p-3 rounded-lg border-2 border-transparent hover:border-slate-300 cursor-pointer">
+                       <div class="flex justify-between items-center">
+                            <p class="font-semibold text-slate-800">Uservorname3 Usernachname3</p>
+                            <span class="group-tag group-remove">Austritt</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-1">Innovationsmanagement</p>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- ===== Rechte Spalte: Detail- & Aktionspanels ===== -->
+            <div class="col-span-12 lg:col-span-8">
+                <!-- ONBOARDING PANEL -->
+                <div id="panel-onboarding" class="action-panel bg-white rounded-xl border border-slate-200">
+                    <div class="p-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-900">Onboarding-Aktion: Uservorname1 Usernachname1</h3>
+                    </div>
+                    <div class="p-5 space-y-6">
+                        <!-- Sektion: Gruppenberechtigungen -->
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Linke Hälfte: Eingaben -->
+                            <div class="space-y-4">
+                                <h4 class="font-semibold text-slate-700">1. Berechtigungen festlegen</h4>
+                                <div>
+                                    <label for="template-user-on" class="text-sm font-medium text-slate-600 block mb-1">Vorlagen-User</label>
+                                    <input type="text" id="template-user-on" value="mustermann_m" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
+                                </div>
+                                <div>
+                                    <label for="additional-groups-on" class="text-sm font-medium text-slate-600 block mb-1">Zusätzliche Gruppen</label>
+                                    <input type="text" id="additional-groups-on" placeholder="Gruppe eingeben + Enter" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
+                                </div>
+                            </div>
+                            <!-- Rechte Hälfte: Vorschau -->
+                            <div>
+                                <h4 class="font-semibold text-slate-700">2. Resultierende Gruppen (Vorschau)</h4>
+                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
+                                    <span class="group-tag group-add">V-Labor-Allgemein</span>
+                                    <span class="group-tag group-add">V-ADM-Projekte</span>
+                                    <span class="group-tag group-add">W-Laufwerk-Projekte</span>
+                                    <span class="group-tag group-add text-blue-800 bg-blue-100">V-Sonderprojekt-X (manuell)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sektion: Admin-Credentials -->
+                        <div>
+                             <h4 class="font-semibold text-slate-700">3. Admin-Anmeldedaten</h4>
+                             <div class="grid grid-cols-2 gap-4 mt-1">
+                                 <div>
+                                    <label for="admin-user" class="text-sm font-medium text-slate-600 block mb-1">Admin-Benutzer</label>
+                                    <input type="text" id="admin-user" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
+                                </div>
+                                <div>
+                                    <label for="admin-pass" class="text-sm font-medium text-slate-600 block mb-1">Passwort</label>
+                                    <input type="password" id="admin-pass" class="w-full p-2 border border-slate-300 rounded-md bg-white text-sm">
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button class="flex items-center justify-center px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button>
+                    </div>
+                </div>
+
+                <!-- TRANSFER (VERSETZUNG) PANEL -->
+                <div id="panel-transfer" class="action-panel hidden bg-white rounded-xl border border-slate-200">
+                    <div class="p-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-900">Versetzungs-Aktion: Uservorname5 Usernachname5</h3>
+                    </div>
+                    <div class="p-5 space-y-6">
+                        <div class="grid grid-cols-2 gap-6">
+                             <!-- Zu entfernende Gruppen -->
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Zu entfernende Gruppen (aus alter Rolle)</h4>
+                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
+                                    <span class="group-tag group-remove">V-ADM-Projekte</span>
+                                    <span class="group-tag group-remove">W-Laufwerk-Projekte</span>
+                                </div>
+                            </div>
+                            <!-- Hinzuzufügende Gruppen -->
+                            <div>
+                                <h4 class="font-semibold text-slate-700">Hinzuzufügende Gruppen (für neue Rolle)</h4>
+                                <div class="bg-slate-50 p-3 rounded-lg border h-48 overflow-y-auto space-y-2 mt-1">
+                                    <span class="group-tag group-add">V-IT-Support</span>
+                                    <span class="group-tag group-add">V-IT-Admin-Tools</span>
+                                    <span class="group-tag group-add">W-Laufwerk-IT</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                             <h4 class="font-semibold text-slate-700">Admin-Anmeldedaten</h4>
+                             <!-- Admin-Credentials Form here -->
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button class="flex items-center justify-center px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button>
+                    </div>
+                </div>
+
+                <!-- OFFBOARDING PANEL -->
+                <div id="panel-offboarding" class="action-panel hidden bg-white rounded-xl border border-slate-200">
+                     <div class="p-5 border-b border-slate-200">
+                        <h3 class="text-lg font-bold text-slate-900">Offboarding-Aktion: Uservorname3 Usernachname3</h3>
+                    </div>
+                    <div class="p-5 space-y-6">
+                         <div>
+                            <h4 class="font-semibold text-slate-700">Aktuelle Gruppenmitgliedschaften (werden entfernt)</h4>
+                            <div class="bg-slate-50 p-3 rounded-lg border overflow-y-auto space-y-2 mt-1">
+                                <span class="group-tag group-neutral">V-Labor-Allgemein</span>
+                                <span class="group-tag group-neutral">V-Innovationsmanagement</span>
+                                <span class="group-tag group-neutral">W-Laufwerk-Innovation</span>
+                            </div>
+                        </div>
+                         <div>
+                             <h4 class="font-semibold text-slate-700">Admin-Anmeldedaten</h4>
+                             <!-- Admin-Credentials Form here -->
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button class="flex items-center justify-center px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Offboarding starten</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const panels = document.querySelectorAll('.action-panel');
+        const taskItems = document.querySelectorAll('#task-list > div');
+
+        function selectTask(taskType) {
+            // Hide all panels
+            panels.forEach(p => p.classList.add('hidden'));
+            
+            // Deactivate all task items
+            taskItems.forEach(t => t.classList.remove('task-item-active'));
+
+            // Show selected panel
+            document.getElementById(`panel-${taskType}`).classList.remove('hidden');
+
+            // Activate selected task item
+            document.getElementById(`task-${taskType}`).classList.add('task-item-active');
+        }
+    </script>
+</body>
+</html>
