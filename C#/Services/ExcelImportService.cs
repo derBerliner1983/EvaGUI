@@ -1,4 +1,4 @@
-using ExcelDataReader;
+﻿using ExcelDataReader;
 using NexusApp.Models;
 using System;
 using System.Collections.Generic;
@@ -39,18 +39,16 @@ namespace NexusApp.Services
                     if (reader.FieldCount < 3) continue;
 
                     bool isRowDate = false;
-                    bool isHeaderRow = false;
-                    
+
                     // Prüfe auf Header-Zeile
                     string firstCellText = reader.GetValue(0)?.ToString() ?? "";
                     string secondCellText = reader.GetValue(1)?.ToString() ?? "";
                     string thirdCellText = reader.GetValue(2)?.ToString() ?? "";
-                    
-                    if (firstCellText.Contains("Datum der Maßnahme") || 
-                        secondCellText.Contains("Datum der Maßnahme") || 
+
+                    if (firstCellText.Contains("Datum der Maßnahme") ||
+                        secondCellText.Contains("Datum der Maßnahme") ||
                         thirdCellText.Contains("Datum der Maßnahme"))
                     {
-                        isHeaderRow = true;
                         dataSectionStarted = true;
                         continue; // Header-Zeile überspringen
                     }
@@ -109,7 +107,7 @@ namespace NexusApp.Services
                 if (!dataSectionStarted)
                 {
                     // KORRIGIERT: Suche nach Header-Zeile mit "Datum der Maßnahme" oder direkt nach Datum in Spalte 1
-                    if (line.Contains("Datum der Maßnahme") || 
+                    if (line.Contains("Datum der Maßnahme") ||
                         (columns.Length > 1 && IsDate(columns[1])))
                     {
                         dataSectionStarted = true;
@@ -126,7 +124,7 @@ namespace NexusApp.Services
                     // Überspringe Zeilen die nur Semikolons enthalten
                     if (line.Trim() == ";;;;;;;;;" || string.IsNullOrWhiteSpace(line.Replace(";", "")))
                         continue;
-                        
+
                     var task = CreateTaskFromRow(columns);
                     if (task != null) importedTasks.Add(task);
                 }
@@ -152,7 +150,7 @@ namespace NexusApp.Services
             {
                 // Überspringe Zeilen mit zu wenig Spalten oder leere Zeilen
                 if (columns.Length < 7) return null;
-                
+
                 // Überspringe Header-Zeilen
                 if (columns.Any(c => c.Contains("Datum der Maßnahme") || c.Contains("Personalnummer")))
                     return null;
@@ -210,7 +208,7 @@ namespace NexusApp.Services
                     case "versetzung": type = TaskProcessType.Versetzung; break;
                     case "austritt": type = TaskProcessType.Austritt; break;
                     case "wiedereinstellung": type = TaskProcessType.Einstellung; break; // Wiedereinstellung als Einstellung behandeln
-                    default: 
+                    default:
                         System.Diagnostics.Debug.WriteLine($"Unbekannte Maßnahmenart: '{processTypeString}'");
                         return null;
                 }
