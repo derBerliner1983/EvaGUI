@@ -1,0 +1,50 @@
+﻿<Window x:Class="NexusApp.Views.ExcelImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NexusApp.Views"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="Excel-Liste importieren" 
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Background="{DynamicResource Color.Card.Background}"
+        Foreground="{DynamicResource Color.Text.Primary}">
+    <Border Style="{StaticResource CardStyle}" MaxWidth="500" MinWidth="450">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" Padding="0,0,0,16" BorderBrush="{DynamicResource Color.Border}" BorderThickness="0,0,0,1">
+                <TextBlock Text="Excel-Liste importieren" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+            </Border>
+
+            <Border DockPanel.Dock="Bottom" Padding="0,16,0,0" BorderBrush="{DynamicResource Color.Border}" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Abbrechen" Style="{StaticResource SecondaryButtonStyle}" Click="CloseButton_Click"/>
+                    <Button Content="Importieren" Style="{StaticResource PrimaryButtonStyle}" Margin="12,0,0,0" Click="ImportButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Margin="0,24">
+                <Border BorderBrush="{DynamicResource Color.Border}" BorderThickness="2" CornerRadius="8" MinHeight="150" Padding="24">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        <!-- KORRIGIERT: Die Farbe des Icons wird nun von der primären Textfarbe des Themes gesteuert. -->
+                        <iconPacks:PackIconMaterial 
+                            x:Name="FileIcon"
+                            Kind="FileExcel" 
+                            Height="48" 
+                            Width="48" 
+                            HorizontalAlignment="Center" 
+                            Foreground="{DynamicResource Color.Text.Primary}"/>
+
+                        <TextBlock x:Name="FileNameText" Text="Keine Datei ausgewählt" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                        <Button x:Name="SelectFileButton" Content="Datei auswählen..." Style="{StaticResource SecondaryButtonStyle}" Margin="0,12,0,0" Click="SelectFileButton_Click"/>
+                    </StackPanel>
+                </Border>
+                <TextBlock Text="Ticketnummer für diesen Import" Margin="0,24,0,4"/>
+                <TextBox/>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>

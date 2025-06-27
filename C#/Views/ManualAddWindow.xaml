@@ -1,0 +1,58 @@
+﻿<Window x:Class="NexusApp.Views.ManualAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NexusApp.Views"
+        mc:Ignorable="d"
+        Title="Neue Aufgabe manuell erfassen"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Background="{DynamicResource Color.Card.Background}"
+        Foreground="{DynamicResource Color.Text.Primary}">
+    <Border Style="{StaticResource CardStyle}" MaxWidth="600" MinWidth="500">
+        <DockPanel>
+            <!-- KORRIGIERT: Padding von StackPanel zu Border verschoben -->
+            <Border DockPanel.Dock="Top" Padding="0,0,0,16" BorderBrush="{DynamicResource Color.Border}" BorderThickness="0,0,0,1">
+                <TextBlock Text="Neue Aufgabe manuell erfassen" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+            </Border>
+            <Border DockPanel.Dock="Bottom" Padding="0,16,0,0" BorderBrush="{DynamicResource Color.Border}" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Abbrechen" Style="{StaticResource SecondaryButtonStyle}" Click="CloseButton_Click"/>
+                    <Button Content="Aufgabe hinzufügen" Style="{StaticResource PrimaryButtonStyle}" Margin="12,0,0,0"/>
+                </StackPanel>
+            </Border>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,16,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Mitarbeitername"/>
+                        <TextBox Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Login-Name"/>
+                        <TextBox Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0">
+                        <TextBlock Text="Profil / Vorlage"/>
+                        <ComboBox Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2">
+                        <TextBlock Text="Ticketnummer"/>
+                        <TextBox Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>
