@@ -1,4 +1,4 @@
-﻿using ExcelDataReader;
+using ExcelDataReader;
 using NexusApp.Models;
 using System;
 using System.Collections.Generic;
@@ -36,18 +36,35 @@ namespace NexusApp.Services
             {
                 while (reader.Read())
                 {
-                    if (reader.FieldCount < 2) continue;
+                    if (reader.FieldCount < 3) continue;
 
                     bool isRowDate = false;
-                    object cellValueObject = reader.GetValue(1); // Spalte B
+                    bool isHeaderRow = false;
+                    
+                    // Prüfe auf Header-Zeile
+                    string firstCellText = reader.GetValue(0)?.ToString() ?? "";
+                    string secondCellText = reader.GetValue(1)?.ToString() ?? "";
+                    string thirdCellText = reader.GetValue(2)?.ToString() ?? "";
+                    
+                    if (firstCellText.Contains("Datum der Maßnahme") || 
+                        secondCellText.Contains("Datum der Maßnahme") || 
+                        thirdCellText.Contains("Datum der Maßnahme"))
+                    {
+                        isHeaderRow = true;
+                        dataSectionStarted = true;
+                        continue; // Header-Zeile überspringen
+                    }
+
+                    // KORRIGIERT: Prüfe Spalte B (Index 1) für Datum - das ist normalerweise richtig für Excel
+                    object cellValueB = reader.GetValue(1); // Spalte B
 
                     // Prüft zuerst, ob Excel die Zelle bereits als Datum typisiert hat.
-                    if (cellValueObject is DateTime)
+                    if (cellValueB is DateTime)
                     {
                         isRowDate = true;
                     }
                     // Falls nicht, wird versucht, den Textinhalt als Datum zu interpretieren.
-                    else if (IsDate(cellValueObject?.ToString()))
+                    else if (IsDate(cellValueB?.ToString()))
                     {
                         isRowDate = true;
                     }
@@ -57,16 +74,18 @@ namespace NexusApp.Services
                         if (isRowDate)
                         {
                             dataSectionStarted = true;
-                            // Erst wenn die Startzeile gefunden wurde, beginnen wir mit der Verarbeitung.
                             var task = CreateTaskFromRow(reader);
                             if (task != null) importedTasks.Add(task);
                         }
                     }
                     else
                     {
-                        // Verarbeitet alle nachfolgenden Zeilen.
-                        var task = CreateTaskFromRow(reader);
-                        if (task != null) importedTasks.Add(task);
+                        // Nur verarbeiten wenn ein Datum vorhanden ist
+                        if (isRowDate)
+                        {
+                            var task = CreateTaskFromRow(reader);
+                            if (task != null) importedTasks.Add(task);
+                        }
                     }
                 }
             }
@@ -85,19 +104,29 @@ namespace NexusApp.Services
             foreach (var line in lines)
             {
                 var columns = line.Split(delimiter);
-                if (columns.Length < 2) continue;
+                if (columns.Length < 3) continue;
 
                 if (!dataSectionStarted)
                 {
-                    if (IsDate(columns[1]))
+                    // KORRIGIERT: Suche nach Header-Zeile mit "Datum der Maßnahme" oder direkt nach Datum in Spalte 1
+                    if (line.Contains("Datum der Maßnahme") || 
+                        (columns.Length > 1 && IsDate(columns[1])))
                     {
                         dataSectionStarted = true;
-                        var task = CreateTaskFromRow(columns);
-                        if (task != null) importedTasks.Add(task);
+                        // Wenn es eine Header-Zeile ist, nicht verarbeiten
+                        if (!line.Contains("Datum der Maßnahme"))
+                        {
+                            var task = CreateTaskFromRow(columns);
+                            if (task != null) importedTasks.Add(task);
+                        }
                     }
                 }
                 else
                 {
+                    // Überspringe Zeilen die nur Semikolons enthalten
+                    if (line.Trim() == ";;;;;;;;;" || string.IsNullOrWhiteSpace(line.Replace(";", "")))
+                        continue;
+                        
                     var task = CreateTaskFromRow(columns);
                     if (task != null) importedTasks.Add(task);
                 }
@@ -116,34 +145,91 @@ namespace NexusApp.Services
             return CreateTaskFromRow(columns);
         }
 
-        // Methode für CSV-Daten (string-Array)
+        // KORRIGIERT: Methode für beide CSV und Excel-Daten, angepasst für Ihr Dateiformat
         private UserTask? CreateTaskFromRow(string[] columns)
         {
-            if (columns.Length < 5) return null;
             try
             {
-                // Spalte C (Index 2) für den Prozess-Typ
-                string processTypeString = columns[2]?.Trim().Trim('"') ?? "";
+                // Überspringe Zeilen mit zu wenig Spalten oder leere Zeilen
+                if (columns.Length < 7) return null;
+                
+                // Überspringe Header-Zeilen
+                if (columns.Any(c => c.Contains("Datum der Maßnahme") || c.Contains("Personalnummer")))
+                    return null;
+
+                // KORRIGIERT: Für Ihre CSV-Datei (basierend auf der bereitgestellten Beispieldatei):
+                // Spalte 0: leer (bei CSV)
+                // Spalte 1: Datum
+                // Spalte 2: Personalnummer  
+                // Spalte 3: Mitarbeiter (Name)
+                // Spalte 4: Kostenstelle
+                // Spalte 5: Abteilung
+                // Spalte 6: Vorgesetzter
+                // Spalte 7: Maßnahmenart (Einstellung/Versetzung/Austritt)
+
+                // Bestimme welche Spalte das Datum enthält (für unterschiedliche Formate)
+                int dateColumn = -1;
+                int nameColumn = -1;
+                int actionColumn = -1;
+
+                // Suche Datum (normalerweise in Spalte 1 bei CSV, Spalte 0 bei Excel ohne leere erste Spalte)
+                for (int i = 0; i < Math.Min(columns.Length, 3); i++)
+                {
+                    if (IsDate(columns[i]))
+                    {
+                        dateColumn = i;
+                        break;
+                    }
+                }
+
+                if (dateColumn == -1) return null; // Kein Datum gefunden
+
+                // Basierend auf Datum-Position, bestimme andere Spalten
+                if (dateColumn == 0)
+                {
+                    // Excel-Format oder CSV ohne leere erste Spalte
+                    nameColumn = 2;
+                    actionColumn = 6;
+                }
+                else if (dateColumn == 1)
+                {
+                    // CSV-Format mit leerer erster Spalte (Ihr Format)
+                    nameColumn = 3;
+                    actionColumn = 7;
+                }
+
+                if (nameColumn >= columns.Length || actionColumn >= columns.Length)
+                    return null;
+
+                // Prozess-Typ extrahieren
+                string processTypeString = columns[actionColumn]?.Trim().Trim('"') ?? "";
                 TaskProcessType type;
                 switch (processTypeString.ToLower())
                 {
                     case "einstellung": type = TaskProcessType.Einstellung; break;
                     case "versetzung": type = TaskProcessType.Versetzung; break;
                     case "austritt": type = TaskProcessType.Austritt; break;
-                    default: return null;
+                    case "wiedereinstellung": type = TaskProcessType.Einstellung; break; // Wiedereinstellung als Einstellung behandeln
+                    default: 
+                        System.Diagnostics.Debug.WriteLine($"Unbekannte Maßnahmenart: '{processTypeString}'");
+                        return null;
                 }
 
-                // Spalte D (Index 3) für Nachname, Spalte E (Index 4) für Vorname
-                string lastName = columns[3]?.Trim().Trim('"') ?? "";
-                string firstName = columns[4]?.Trim().Trim('"') ?? "";
-                string fullName = $"{firstName} {lastName}".Trim();
+                // Mitarbeitername extrahieren
+                string fullName = columns[nameColumn]?.Trim().Trim('"') ?? "";
 
                 if (string.IsNullOrWhiteSpace(fullName)) return null;
 
                 string id = Guid.NewGuid().ToString();
                 return new UserTask(id, fullName, type);
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                // Debug-Ausgabe für Fehlerdiagnose
+                System.Diagnostics.Debug.WriteLine($"Fehler beim Erstellen der Aufgabe: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Spalten: {string.Join(" | ", columns)}");
+                return null;
+            }
         }
 
         private bool IsDate(string? text)
