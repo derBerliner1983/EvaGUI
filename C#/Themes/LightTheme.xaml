@@ -1,1 +1,16 @@
-
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<SolidColorBrush x:Key="Color.Background" Color="#F1F5F9"/>
+	<SolidColorBrush x:Key="Color.Card.Background" Color="White"/>
+	<SolidColorBrush x:Key="Color.Border" Color="#E2E8F0"/>
+	<SolidColorBrush x:Key="Color.Text.Primary" Color="#1E293B"/>
+	<SolidColorBrush x:Key="Color.Accent.Blue.Background" Color="#E0F2FE"/>
+	<SolidColorBrush x:Key="Color.Accent.Blue.Border" Color="#38BDF8"/>
+	<SolidColorBrush x:Key="Color.Accent.Blue.Text" Color="#0C4A6E"/>
+	<SolidColorBrush x:Key="Color.Badge.Green.Background" Color="#DCFCE7"/>
+	<SolidColorBrush x:Key="Color.Badge.Green.Foreground" Color="#166534"/>
+	<SolidColorBrush x:Key="Color.Badge.Yellow.Background" Color="#FEF9C3"/>
+	<SolidColorBrush x:Key="Color.Badge.Yellow.Foreground" Color="#854D0E"/>
+	<SolidColorBrush x:Key="Color.Badge.Red.Background" Color="#FEE2E2"/>
+	<SolidColorBrush x:Key="Color.Badge.Red.Foreground" Color="#991B1B"/>
+</ResourceDictionary>
