@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Finale UI-Vorlage (Vollständig)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Light & Dark Theme Styles */
+        .dark .dark\:bg-slate-900 { background-color: #0f172a; }
+        .dark .dark\:bg-slate-800 { background-color: #1e293b; }
+        .dark .dark\:text-slate-200 { color: #e2e8f0; }
+        .dark .dark\:border-slate-700 { border-color: #334155; }
+        .dark .dark\:hover\:bg-slate-700:hover { background-color: #334155 !important; }
+        .dark .dark\:bg-slate-900\/50 { background-color: rgba(15, 23, 42, 0.5); }
+        .dark .dark\:border-slate-600 { border-color: #475569; }
+        .dark .dark\:hover\:bg-slate-700\/50:hover { background-color: rgba(51, 65, 85, 0.5); }
+        .dark .dark\:placeholder-slate-500::placeholder { color: #64748b; }
+        .dark .dark\:bg-slate-800\/50 { background-color: rgba(30, 41, 59, 0.5); }
+        .dark .dark\:text-slate-400 { color: #94a3b8; }
+        .dark .dark\:bg-transparent { background-color: transparent; }
+
+        .task-item-active { background-color: #e0f2fe; border-color: #38bdf8; }
+        .dark .task-item-active { background-color: #1e293b; border-color: #38bdf8; }
+        .dark .task-item-active .font-semibold { color: #e2e8f0 !important; }
+
+        .group-tag { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: 500; gap: 6px; }
+        .group-tag .remove-icon { cursor: pointer; opacity: 0.5; transition: opacity 0.2s; }
+        .group-tag:hover .remove-icon { opacity: 1; }
+        
+        .group-green { background-color: #dcfce7; color: #166534; }
+        .dark .group-green { background-color: #14532d; color: #bbf7d0; }
+        .group-blue { background-color: #cffafe; color: #0e7490; }
+        .dark .group-blue { background-color: #164e63; color: #a5f3fc; }
+        .group-red { background-color: #fee2e2; color: #991b1b; }
+        .dark .group-red { background-color: #7f1d1d; color: #fecaca; }
+
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; transition: background-color 0.3s ease; }
+        .status-ok { background-color: #22c55e; }
+        .status-fail { background-color: #ef4444; }
+        .status-neutral { background-color: #94a3b8; }
+        .dark .status-neutral { background-color: #475569; }
+
+        .section-disabled { opacity: 0.5; pointer-events: none; }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+
+    <div class="flex flex-col h-screen">
+        <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col flex-grow">
+            <header class="flex items-center justify-between mb-6 flex-shrink-0">
+                <div class="flex items-center"><i data-lucide="shield-check" class="text-sky-600 h-9 w-9"></i><h1 class="text-2xl font-bold ml-3">Nexus</h1></div>
+                <div class="flex items-center space-x-3">
+                    <button id="import-excel-button" class="flex items-center justify-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <i data-lucide="file-up" class="h-4 w-4 mr-2"></i> Excel-Liste importieren
+                    </button>
+                    <button id="add-manual-button" class="flex items-center justify-center px-4 py-2 bg-sky-600 border border-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">
+                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i> Manuell hinzufügen
+                    </button>
+                    <div class="relative">
+                        <button id="theme-toggle-button" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400">
+                            <i data-lucide="sun" class="block dark:hidden"></i>
+                            <i data-lucide="moon" class="hidden dark:block"></i>
+                        </button>
+                        <div id="theme-menu" class="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 hidden z-10">
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="light"><i data-lucide="sun" class="w-4 h-4"></i> Light</a>
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="dark"><i data-lucide="moon" class="w-4 h-4"></i> Dark</a>
+                            <a href="#" class="theme-option flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700" data-theme="system"><i data-lucide="monitor" class="w-4 h-4"></i> System</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="grid grid-cols-12 gap-6 flex-grow overflow-hidden">
+                <!-- Linke Spalte -->
+                <div class="col-span-12 lg:col-span-4 flex flex-col bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                    <h3 class="font-semibold mb-3 px-2 flex-shrink-0">Anstehende Aufgaben (<span id="task-count">5</span>)</h3>
+                    <div id="task-list" class="space-y-2 overflow-y-auto pr-2">
+                        <!-- Aufgaben werden per JS hier eingefügt -->
+                    </div>
+                </div>
+
+                <!-- Rechte Spalte -->
+                <div class="col-span-12 lg:col-span-8">
+                    <div id="panel-onboarding" class="action-panel hidden bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700">
+                             <h3 id="onboarding-title" class="text-lg font-bold">Onboarding</h3>
+                             <div class="flex items-center gap-2 mt-2">
+                                <label for="ticket-onboarding" class="text-sm font-medium text-slate-500 dark:text-slate-400">Ticketnummer:</label>
+                                <input type="text" id="ticket-onboarding" class="flex-grow p-1 text-sm rounded-md bg-transparent border border-transparent read-only:bg-transparent" readonly>
+                                <button class="edit-ticket-button p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="pencil" class="h-4 w-4 text-slate-500"></i></button>
+                            </div>
+                        </div>
+                        <div class="p-5 space-y-6">
+                            <div>
+                                <div id="settings-header" class="flex items-center justify-between cursor-pointer">
+                                    <h4 class="font-semibold">1. Grundeinstellungen</h4>
+                                    <i id="settings-chevron" data-lucide="chevron-down" class="h-5 w-5"></i>
+                                </div>
+                                <div id="settings-content" class="hidden mt-2 grid grid-cols-2 gap-x-6 gap-y-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                                    <label class="flex items-center"><input type="checkbox" id="option-create-mailbox" class="h-4 w-4 rounded mr-2"> Postfach erstellen</label>
+                                    <label class="flex items-center"><input type="checkbox" id="option-create-homedrive" class="h-4 w-4 rounded mr-2"> Home-Laufwerk anlegen</label>
+                                    <label class="flex items-center col-span-2"><input type="checkbox" id="option-copy-attributes" class="h-4 w-4 rounded mr-2"> Attribute von Vorlage kopieren</label>
+                                </div>
+                            </div>
+                            <div id="groups-section" class="grid grid-cols-2 gap-6">
+                                <div class="space-y-4"><h4 class="font-semibold">2. Berechtigungen festlegen</h4>
+                                    <div><label class="text-sm font-medium">Login-Name</label><input type="text" id="login-name-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent dark:placeholder-slate-500"></div>
+                                    <div id="template-user-wrapper" class="transition-opacity duration-300"><label class="text-sm font-medium">Vorlagen-User</label><input type="text" id="template-user-on" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent dark:placeholder-slate-500"></div>
+                                    <div><label class="text-sm font-medium">Zusätzliche Gruppen</label><input type="text" id="additional-groups-input" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent dark:placeholder-slate-500" placeholder="Gruppe eingeben + Enter"></div>
+                                </div>
+                                <div><h4 class="font-semibold">3. Resultierende Gruppen (Vorschau)</h4>
+                                    <div id="preview-groups-container" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 overflow-y-auto mt-1 flex flex-col gap-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-green-600 rounded-lg font-bold text-white hover:bg-green-700">Onboarding starten</button></div>
+                    </div>
+                     <div id="panel-transfer" class="action-panel hidden bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700">
+                            <h3 id="transfer-title" class="text-lg font-bold">Versetzung</h3>
+                             <div class="flex items-center gap-2 mt-2">
+                                <label for="ticket-transfer" class="text-sm font-medium text-slate-500 dark:text-slate-400">Ticketnummer:</label>
+                                <input type="text" id="ticket-transfer" class="flex-grow p-1 text-sm rounded-md bg-transparent border border-transparent read-only:bg-transparent" readonly>
+                                <button class="edit-ticket-button p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="pencil" class="h-4 w-4 text-slate-500"></i></button>
+                            </div>
+                        </div>
+                        <div class="p-5 space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div><h4 class="font-semibold">Zu entfernende Gruppen</h4>
+                                    <div id="transfer-remove-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                </div>
+                                <div class="space-y-4"><h4 class="font-semibold">Hinzuzufügende Gruppen</h4>
+                                    <div id="transfer-add-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 h-48 mt-1 space-y-2 flex flex-col gap-2"></div>
+                                    <input type="text" id="transfer-groups-input" placeholder="Gruppe eingeben + Enter" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent dark:placeholder-slate-500">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-blue-600 rounded-lg font-bold text-white hover:bg-blue-700">Versetzung durchführen</button></div>
+                     </div>
+                     <div id="panel-offboarding" class="action-panel hidden bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-700">
+                            <h3 id="offboarding-title" class="text-lg font-bold">Austritt</h3>
+                             <div class="flex items-center gap-2 mt-2">
+                                <label for="ticket-offboarding" class="text-sm font-medium text-slate-500 dark:text-slate-400">Ticketnummer:</label>
+                                <input type="text" id="ticket-offboarding" class="flex-grow p-1 text-sm rounded-md bg-transparent border border-transparent read-only:bg-transparent" readonly>
+                                <button class="edit-ticket-button p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="pencil" class="h-4 w-4 text-slate-500"></i></button>
+                            </div>
+                        </div>
+                         <div class="p-5 space-y-6">
+                             <div><h4 class="font-semibold">Folgende Gruppen & Zugänge werden entfernt</h4>
+                                <div id="offboarding-remove-groups" class="bg-slate-100 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mt-1 space-y-2 flex flex-col gap-2"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end"><button class="px-6 py-2.5 bg-red-600 rounded-lg font-bold text-white hover:bg-red-700">Austritt durchführen</button></div>
+                     </div>
+                </div>
+            </main>
+
+            <footer class="w-full max-w-[1600px] mx-auto mt-4 flex-shrink-0">
+                 <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 mb-6">
+                    <div id="log-header" class="p-3 cursor-pointer flex justify-between items-center rounded-t-xl hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                         <div class="flex items-center gap-3">
+                             <i data-lucide="terminal" class="text-slate-500"></i>
+                             <h4 class="font-semibold">PowerShell Live-Ausgabe</h4>
+                         </div>
+                         <i id="log-chevron" data-lucide="chevron-down" class="text-slate-500"></i>
+                    </div>
+                    <div id="log-content" class="p-4 bg-slate-900 text-sm font-mono h-56 overflow-y-auto text-slate-300 rounded-b-xl hidden">
+                       <p>> <span class="text-white">Skript wird gestartet...</span></p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                    <div class="grid grid-cols-12 items-center gap-4">
+                        <div class="col-span-2"><h3 class="font-semibold">Globale Admin-Anmeldedaten</h3></div>
+                        <div class="col-span-3"><input type="text" placeholder="Admin-Benutzer" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                        <div class="col-span-3"><input type="password" id="global-admin-pass" placeholder="Passwort" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                        <div class="col-span-2 flex items-center justify-start gap-2">
+                            <button id="test-creds-button" class="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700" title="Anmeldedaten prüfen"><i data-lucide="key-round" class="h-4 w-4 text-slate-500"></i></button>
+                            <span class="text-sm font-medium">Credentials</span>
+                            <div id="cred-status" class="status-dot status-neutral"></div>
+                        </div>
+                        <div class="col-span-2 flex items-center justify-start gap-2">
+                            <button id="test-ad-button" class="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700" title="AD-Verbindung prüfen"><i data-lucide="server" class="h-4 w-4 text-slate-500"></i></button>
+                            <span class="text-sm font-medium">AD-Verbindung</span>
+                            <div id="ad-status" class="status-dot status-neutral"></div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="manual-add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-20 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg w-full max-w-2xl">
+            <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Neue Aufgabe manuell erfassen</h3>
+                <button class="close-modal-button p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-sm font-medium">Mitarbeitername</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                    <div><label class="text-sm font-medium">Login-Name</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                    <div><label class="text-sm font-medium">Abteilung</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                    <div><label class="text-sm font-medium">Ticketnummer</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                </div>
+                <div id="manual-onboarding-options" class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                     <div class="grid grid-cols-2 gap-4">
+                         <div><label class="text-sm font-medium">Profil / Vorlage</label><select id="profile-select" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"><option value="standard">Standard-Mitarbeiter</option><option value="function">Funktionsaccount</option><option value="hr">Personalabteilung (ohne Gruppen)</option></select></div>
+                         <div><label class="text-sm font-medium">Vorlagen-User</label><input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
+                <button class="close-modal-button px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-600">Abbrechen</button>
+                <button id="add-task-confirm-button" class="px-4 py-2 bg-sky-600 rounded-lg text-sm font-semibold text-white hover:bg-sky-700">Aufgabe hinzufügen</button>
+            </div>
+        </div>
+    </div>
+    <div id="excel-import-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-20 hidden">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg w-full max-w-xl">
+             <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Excel-Liste importieren</h3>
+                <button class="close-modal-button p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"><i data-lucide="x" class="h-5 w-5"></i></button>
+            </div>
+            <div class="p-8">
+                <div id="drop-zone" class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-10 text-center cursor-pointer hover:border-sky-500 dark:hover:border-sky-500 transition-colors">
+                    <i data-lucide="upload-cloud" class="h-12 w-12 mx-auto text-slate-400"></i>
+                    <p class="mt-2 font-semibold">Datei hierher ziehen</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">oder zum Auswählen klicken</p>
+                    <input type="file" id="file-input" class="hidden" accept=".xlsx, .xls, .csv">
+                </div>
+                <div id="file-name" class="mt-4 text-sm text-center"></div>
+                <div class="mt-6">
+                    <label class="text-sm font-medium">Ticketnummer für diesen Import</label>
+                    <input type="text" class="w-full mt-1 p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-transparent">
+                </div>
+            </div>
+             <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-3">
+                <button class="close-modal-button px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-600">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
+            let tasks = [
+                { id: 'onboarding-1', name: 'Uservorname1', type: 'Einstellung', profile: 'standard', ticket: 'TICKET-12345' },
+                { id: 'transfer-1', name: 'Uservorname5', type: 'Versetzung', profile: 'standard', ticket: 'TICKET-12346' },
+                { id: 'offboarding-1', name: 'Uservorname3', type: 'Austritt', profile: 'standard', ticket: 'TICKET-12347' },
+                { id: 'onboarding-2', name: 'Uservorname4', type: 'Einstellung', profile: 'function', ticket: 'TICKET-12348' },
+                { id: 'onboarding-3', name: 'Uservorname6', type: 'Einstellung', profile: 'hr', ticket: 'TICKET-12349' },
+            ];
+            let selectedTaskId = 'onboarding-1';
+
+            function renderTaskList() {
+                const taskListContainer = document.getElementById('task-list');
+                taskListContainer.innerHTML = '';
+                document.getElementById('task-count').textContent = tasks.length;
+                tasks.forEach(task => {
+                    const taskItem = document.createElement('div');
+                    taskItem.id = `task-${task.id}`;
+                    taskItem.className = `p-3 rounded-lg border-2 cursor-pointer ${task.id === selectedTaskId ? 'task-item-active' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-700/50'}`;
+                    let tagColor, tagText;
+                    switch (task.type) {
+                        case 'Versetzung': tagColor = 'yellow'; tagText = 'Versetzung'; break;
+                        case 'Austritt': tagColor = 'red'; tagText = 'Austritt'; break;
+                        default: tagColor = 'green'; tagText = 'Einstellung'; break;
+                    }
+                    taskItem.innerHTML = `<div class="flex justify-between items-center"><p class="font-semibold ${task.id === selectedTaskId ? 'text-sky-800 dark:text-slate-200' : ''}">${task.name}</p><span class="px-2 py-0.5 text-xs font-medium text-${tagColor}-800 bg-${tagColor}-100 dark:bg-${tagColor}-900/50 dark:text-${tagColor}-300 rounded-full">${tagText}</span></div>`;
+                    taskItem.addEventListener('click', () => { selectedTaskId = task.id; renderAll(); });
+                    taskListContainer.appendChild(taskItem);
+                });
+            }
+
+            function renderMainPanel() {
+                document.querySelectorAll('.action-panel').forEach(p => p.classList.add('hidden'));
+                const selectedTask = tasks.find(t => t.id === selectedTaskId);
+                if (!selectedTask) return;
+                let panelId;
+                switch (selectedTask.type) {
+                    case 'Einstellung': panelId = 'panel-onboarding'; break;
+                    case 'Versetzung': panelId = 'panel-transfer'; break;
+                    case 'Austritt': panelId = 'panel-offboarding'; break;
+                }
+                const panel = document.getElementById(panelId);
+                if (panel) {
+                    panel.classList.remove('hidden');
+                    const titleElement = panel.querySelector('.text-lg.font-bold');
+                    if(titleElement) titleElement.textContent = `${selectedTask.type}: ${selectedTask.name}`;
+                    const ticketInput = panel.querySelector('input[id^="ticket-"]');
+                    if(ticketInput) {
+                        ticketInput.value = selectedTask.ticket;
+                        ticketInput.setAttribute('readonly', true);
+                        ticketInput.classList.add('read-only:bg-transparent', 'border-transparent');
+                        ticketInput.classList.remove('bg-white', 'dark:bg-slate-900', 'border-slate-300', 'dark:border-slate-600');
+                    }
+                    if (selectedTask.type === 'Einstellung') {
+                        updateOnboardingOptions(selectedTask.profile);
+                    } else if (selectedTask.type === 'Versetzung') {
+                        populateTransferPanels();
+                    } else if (selectedTask.type === 'Austritt') {
+                        populateOffboardingPanel();
+                    }
+                }
+            }
+            
+            function updateOnboardingOptions(profile) {
+                 const mailboxCheckbox = document.getElementById('option-create-mailbox');
+                 const homedriveCheckbox = document.getElementById('option-create-homedrive');
+                 const copyAttrCheckbox = document.getElementById('option-copy-attributes');
+                 const templateUserWrapper = document.getElementById('template-user-wrapper');
+                 const groupsSection = document.getElementById('groups-section');
+                 
+                 switch (profile) {
+                     case 'function':
+                         mailboxCheckbox.checked = false; homedriveCheckbox.checked = true; copyAttrCheckbox.checked = true;
+                         groupsSection.classList.remove('section-disabled');
+                         break;
+                     case 'hr':
+                         mailboxCheckbox.checked = true; homedriveCheckbox.checked = true; copyAttrCheckbox.checked = false;
+                         groupsSection.classList.add('section-disabled');
+                         break;
+                     default:
+                         mailboxCheckbox.checked = true; homedriveCheckbox.checked = true; copyAttrCheckbox.checked = true;
+                         groupsSection.classList.remove('section-disabled');
+                         break;
+                 }
+                 templateUserWrapper.classList.toggle('section-disabled', !copyAttrCheckbox.checked);
+                 populateOnboardingPreview(profile !== 'hr');
+            }
+
+            function addGroup(container, name, color) {
+                const placeholder = container.querySelector('p');
+                if (placeholder) placeholder.remove();
+                const uniqueId = `group-${container.id}-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+                if (document.getElementById(uniqueId)) return;
+                const tag = document.createElement('div');
+                tag.id = uniqueId;
+                tag.className = `group-tag w-fit group-${color}`;
+                const span = document.createElement('span');
+                span.textContent = name;
+                const removeIcon = document.createElement('i');
+                removeIcon.setAttribute('data-lucide', 'x');
+                removeIcon.className = 'remove-icon h-3 w-3';
+                removeIcon.addEventListener('click', (e) => { e.stopPropagation(); tag.remove(); if (container.childElementCount === 0) { container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Keine Gruppen.</p>'; }});
+                tag.appendChild(span); tag.appendChild(removeIcon);
+                container.appendChild(tag);
+                lucide.createIcons({nodes: [removeIcon]});
+            }
+
+            function populateOnboardingPreview(addGroups) {
+                const container = document.getElementById('preview-groups-container');
+                container.innerHTML = ''; 
+                if (addGroups) {
+                    const mockTemplateGroups = ['V-Labor-Allgemein', 'V-ADM-Projekte', 'W-Laufwerk-Projekte'];
+                    mockTemplateGroups.forEach(group => addGroup(container, group, 'green'));
+                }
+                if (container.childElementCount === 0) { container.innerHTML = '<p class="text-sm text-slate-400 m-auto">Keine Gruppen.</p>'; }
+            }
+            function populateTransferPanels() {
+                const removeContainer = document.getElementById('transfer-remove-groups');
+                const addContainer = document.getElementById('transfer-add-groups');
+                removeContainer.innerHTML = ''; addContainer.innerHTML = '';
+                ['V-ADM-Projekte', 'W-Laufwerk-Projekte'].forEach(g => addGroup(removeContainer, g, 'red'));
+                ['V-IT-Support'].forEach(g => addGroup(addContainer, g, 'green'));
+            }
+            function populateOffboardingPanel() {
+                const container = document.getElementById('offboarding-remove-groups');
+                container.innerHTML = '';
+                ['V-Labor-Allgemein', 'V-Innovationsmanagement'].forEach(g => addGroup(container, g, 'red'));
+            }
+            
+            function renderAll() {
+                renderTaskList();
+                renderMainPanel();
+            }
+            
+            // --- EVENT LISTENERS ---
+            document.getElementById('add-manual-button').addEventListener('click', () => document.getElementById('manual-add-modal').classList.remove('hidden'));
+            document.getElementById('import-excel-button').addEventListener('click', () => document.getElementById('excel-import-modal').classList.remove('hidden'));
+            document.querySelectorAll('.close-modal-button').forEach(b => {
+                 b.addEventListener('click', () => {
+                     document.getElementById('manual-add-modal').classList.add('hidden');
+                     document.getElementById('excel-import-modal').classList.add('hidden');
+                 });
+            });
+            const themeToggleButton = document.getElementById('theme-toggle-button');
+            const themeMenu = document.getElementById('theme-menu');
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeToggleButton.addEventListener('click', (e) => { e.stopPropagation(); themeMenu.classList.toggle('hidden'); });
+            document.addEventListener('click', () => themeMenu.classList.add('hidden'));
+            const applyTheme = (theme) => {
+                document.documentElement.classList.toggle('dark', theme === 'dark');
+                lucide.createIcons();
+            };
+            const setSystemTheme = () => { applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); };
+            themeOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selectedTheme = e.currentTarget.dataset.theme;
+                    localStorage.setItem('theme', selectedTheme);
+                    if (selectedTheme === 'system') { setSystemTheme(); } else { applyTheme(selectedTheme); }
+                });
+            });
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && savedTheme !== 'system') { applyTheme(savedTheme); } else { setSystemTheme(); }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (localStorage.getItem('theme') === 'system' || !localStorage.getItem('theme')) { setSystemTheme(); } });
+            
+            const credStatusDot = document.getElementById('cred-status');
+            const adStatusDot = document.getElementById('ad-status');
+            const testCredsButton = document.getElementById('test-creds-button');
+            const testAdButton = document.getElementById('test-ad-button');
+            const globalAdminPassInput = document.getElementById('global-admin-pass');
+            
+            globalAdminPassInput.addEventListener('input', () => {
+                credStatusDot.className = 'status-dot status-neutral';
+            });
+            testCredsButton.addEventListener('click', () => {
+                const success = Math.random() > 0.3; 
+                credStatusDot.className = `status-dot ${success ? 'status-ok' : 'status-fail'}`;
+            });
+            testAdButton.addEventListener('click', () => {
+                const success = Math.random() > 0.3;
+                adStatusDot.className = `status-dot ${success ? 'status-ok' : 'status-fail'}`;
+            });
+
+            document.getElementById('template-user-on').addEventListener('blur', () => populateOnboardingPreview(true));
+            document.getElementById('additional-groups-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                    e.preventDefault(); addGroup(document.getElementById('preview-groups-container'), e.target.value.trim(), 'blue'); e.target.value = '';
+                }
+            });
+            document.getElementById('transfer-groups-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                    e.preventDefault(); addGroup(document.getElementById('transfer-add-groups'), e.target.value.trim(), 'blue'); e.target.value = '';
+                }
+            });
+            const logHeader = document.getElementById('log-header');
+            const logContent = document.getElementById('log-content');
+            const logChevron = document.getElementById('log-chevron');
+            logHeader.addEventListener('click', () => {
+                const isHidden = logContent.classList.toggle('hidden');
+                logChevron.outerHTML = `<i id="log-chevron" data-lucide="${isHidden ? 'chevron-down' : 'chevron-up'}" class="text-slate-500"></i>`;
+                lucide.createIcons();
+            });
+            document.querySelectorAll('.edit-ticket-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const input = e.currentTarget.previousElementSibling;
+                    const isReadonly = input.hasAttribute('readonly');
+                    if (isReadonly) {
+                        input.removeAttribute('readonly');
+                        input.focus();
+                        input.classList.remove('read-only:bg-transparent', 'border-transparent');
+                        input.classList.add('bg-white', 'dark:bg-slate-900', 'border-slate-300', 'dark:border-slate-600');
+                    } else {
+                        input.setAttribute('readonly', true);
+                        input.classList.add('read-only:bg-transparent', 'border-transparent');
+                        input.classList.remove('bg-white', 'dark:bg-slate-900', 'border-slate-300', 'dark:border-slate-600');
+                    }
+                });
+            });
+            const settingsHeader = document.getElementById('settings-header');
+            const settingsContent = document.getElementById('settings-content');
+            const copyAttrCheckbox = document.getElementById('option-copy-attributes');
+            const templateUserWrapper = document.getElementById('template-user-wrapper');
+            settingsHeader.addEventListener('click', () => {
+                const isHidden = settingsContent.classList.toggle('hidden');
+                settingsHeader.querySelector('i').outerHTML = `<i id="settings-chevron" data-lucide="${isHidden ? 'chevron-down' : 'chevron-up'}" class="h-5 w-5"></i>`;
+                lucide.createIcons();
+            });
+            
+            // Initialisierung
+            renderAll();
+        });
+    </script>
+</body>
+</html>
